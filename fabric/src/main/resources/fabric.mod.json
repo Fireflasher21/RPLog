@@ -10,22 +10,21 @@
     "issues": "${issueTrackerUrl}"
   },
   "license": "${license}",
-  "icon": "assets/examplemod/icon.png",
-  "environment": "*",
+  "icon": "assets/rplog/icon.png",
+  "environment": "client",
   "entrypoints": {
     "main": [
-      "fireflasher.rplog.fabric.Entrypoint"
+      "fireflasher.rplog.fabric.InitMod"
     ],
     "client": [
-      "fireflasher.rplog.fabric.EntrypointClient"
+      "fireflasher.rplog.fabric.FabricRPLog"
     ],
-    "server": [
-      "fireflasher.rplog.fabric.EntrypointDedicatedServer"
+    "modmenu":[
+      "fireflasher.rplog.fabric.config.modmenu.ModmenuHandler"
     ]
   },
   "mixins": [
-    "examplemod.mixins.json",
-    "examplemod.fabric.mixins.json"
+    "rplog.fabric.mixins.json"
   ],
   "depends": {
     "fabric": ">=${fabricVersion}",
@@ -34,7 +33,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/yX7u32cKuN"
+        "modmenu.discord": "https://discord.gg/V9XcJSSdwB"
       }
     }
   }
