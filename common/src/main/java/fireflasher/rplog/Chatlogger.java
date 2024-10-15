@@ -1,7 +1,7 @@
 package fireflasher.rplog;
 
 import fireflasher.rplog.config.json.ServerConfig;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +19,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static fireflasher.rplog.RPLog.CONFIG;
-import static fireflasher.rplog.RPLog.LOGGER;
+import static fireflasher.rplog.RPLog.*;
 
 public class Chatlogger {
 
@@ -71,7 +70,7 @@ public class Chatlogger {
                             if(new File(filename).exists()) fileToZip.delete();
                         }
                         catch (IOException e){
-                            TranslatableComponent logger_zipwarning  = new TranslatableComponent("rplog.logger.chatlogger.zip_warning");
+                            Component logger_zipwarning  = RPLog.translateAbleStrings.get("rplog.logger.chatlogger.zip_warning");
                             LOGGER.warn(logger_zipwarning);
                         }
                     }

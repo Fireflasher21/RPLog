@@ -1,10 +1,9 @@
 package fireflasher.rplog.config;
 
 import com.google.gson.Gson;
-import fireflasher.rplog.RPLog;
+import fireflasher.rplog.*;
 import fireflasher.rplog.config.json.JsonConfig;
 import fireflasher.rplog.config.json.ServerConfig;
-import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +38,7 @@ public class DefaultConfig {
 
     public void setup() {
         this.ConfigFile = new File(ConfigDir + ConfigFileName);
-        if (ConfigFile.exists()) LOGGER.info(new TranslatableComponent("rplog.logger.defaultconfig.config_created").getContents());
+        if (ConfigFile.exists())LOGGER.info( RPLog.translateAbleStrings.get("rplog.logger.defaultconfig.config_created"));
         else setConfigFile();
         loadConfig();
     }
@@ -49,7 +48,7 @@ public class DefaultConfig {
             this.ConfigFile = new File(ConfigDir, ConfigFileName);
             try {
                 boolean wasCreated = ConfigFile.createNewFile();
-                if(!wasCreated)LOGGER.error(new TranslatableComponent("rplog.logger.defaultconfig.config_create_error")+"\n"+ConfigFile);
+                if(!wasCreated)LOGGER.error(RPLog.translateAbleStrings.get("rplog.logger.defaultconfig.config_create_error")+"\n"+ConfigFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }

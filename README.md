@@ -1,55 +1,44 @@
-Straywave's Mod Template
-========================
+# RPLog
+## Description
+This Mod is a simple Log Plugin, which logs Keywords which you can specify before handed and while Playing.
+It saves the logs in sorted folders per Server and you can add a custom Keyword-List for each Server.
+If no list is configured for a specific Server, the Mod uses the a default List which can also be edited independently.
 
-A template that lets you build Minecraft mods for multiple versions and multiple loaders at the same time. Note that
-Architectury API is *not* included, the only default dependency is Fabric API (on Fabric, obviously). A GitHub Workflow
-is also included to help automate building and testing for pull requests.
+## Versioning
 
-## Usage
+### Release pattern
+The mod is coded to be multi-version abroad the Minecraft version, categorised by the java version.
+The current pattern uses following scheme: <j>.<x>.<y>.<z>
+- j: java version in which this release can be used in
+- x: major release version
+- y: minor release version
+- z: patch of minor release version
 
-You should know how to use Architectury before using this. In short, Architectury splits up your codebase between 3
-sub-projects, `common`, `fabric`, `forge`. Common is where the loader-agnostic code is, Fabric and Forge contain code
-for the respective mod loader.
+This means, the release 17.5.0.0 can be used in Minecraft \[1.18-1.20\] as all those use the Java Version 17
+The release 21.5.0.0 can be used in \[1.21-tba\]
 
-Obviously, not all logic is the same across versions, so that's where Manifold comes in.
+### Feature implementation 
+The <x>.<y>.<z> releases have the same features implemented across the <j> version.
+This means, the release 17.6.1.0 has a new feature and bug fix, which 21.5.0.0 does not have, even tho, 21 is greater than 17
 
-[Manifold][1] is a neat little Gradle plugin that, among other things, adds a preprocessor to Java. It brings the C-like
-syntax of `#if`, `#elif`, `#else`, and `#endif` to Java.
+### Older versions
+Older versions are not multi-version thus don't have the java version tag and follow the feature pattern: <x>.<y>.<z>
+Versions before 4.2.0 can only be Configured with Modmenu from Terraformers: [github][1] or [modrinth][2]
 
-By default, there are 3 versions, 1.18.2, 1.19.2, and 1.20.1. You can write version-specific code like so:
+## Issues, Bugs or Crashes
+If you experience any Crashes or Bugs open an [Issue][3] or join the [Discord][4] . Im also always happy to improve the mod, so send me ideas of what you think would be neat to add.
 
-```c
-if MC_1_18_2
-System.out.println("Hello, Minecraft 1.18!");
-#elif MC_1_19_2
-System.out.println("Hello, Minecraft 1.19!");
-#elif MC_1_20_1
-System.out.println("Hello, Minecraft 1.20!");
-#endif
-```
+## History
+This Mod was written by me to help specifically Roleplayers, which often access the logs of their RP History if their Server is text based.
+In my Case it was Aegorin and all the people who make this Server what it is. To help them and to increase the fun and Quality of the Roleplay i started this Mod
 
-So, in short, after cloning this repo:
+If you want to check out the Server here you go: [Aegorin][5]
+But keep in mind, that the Servers only language is German
 
-1. Install Manifold plugin in IntelliJ IDEA (other IDEs aren't supported well) and restart IDEA.
-2. Run `./gradlew genSources` to decompile Minecraft and have the sources ready.
-3. Fill in the blanks in `gradle.properties`, under the "Key mod properties".
-4. Start coding!
 
-Some general usage guidance:
 
-- Don't touch `build.properties`. It is auto generated and should be synced with current mappings.
-- Use `-Pminecraft=1.18.2`, (or `1.19.2`/`1.20.1`) to specify the target version on the command line.
-
-## Adding a new version
-
-1. Copy-paste one of the existing files in `props/`, name it according to the version.
-2. Fill it in with all the latest versions of fabric, forge, etc.
-3. Specify it as your Minecraft version in `gradle.properties` and/or `-Pminecraft`
-4. Run `./gradlew genSources` to generate sources for the new version.
-5. Voila!
-
-## Building everything
-
-Run `build.sh` to build the final JARs. Outputs will be in `forge/build/libs` and `fabric/build/libs`.
-
-[1]: http://manifold.systems
+[1]:https://github.com/TerraformersMC/ModMenu
+[2]:https://modrinth.com/mod/modmenu
+[3]:https://github.com/Fireflasher21/RPLog/Issues
+[4]:https://discord.gg/V9XcJSSdwB
+[5]:https://aegorin.de

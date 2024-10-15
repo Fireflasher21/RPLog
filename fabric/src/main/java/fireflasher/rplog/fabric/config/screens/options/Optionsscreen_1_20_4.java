@@ -1,17 +1,17 @@
-package fireflasher.rplog.fabric.config.screens;
+package fireflasher.rplog.fabric.config.screens.options;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import fireflasher.rplog.RPLog;
+#if MC_1_20_4
+import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
 import fireflasher.rplog.config.json.ServerConfig;
-import net.minecraft.Util;
+import fireflasher.rplog.fabric.config.screens.ScrollPane;
+import fireflasher.rplog.fabric.config.screens.servers.Serverscreen_1_20_4;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -19,20 +19,20 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static fireflasher.rplog.Chatlogger.*;
-import static fireflasher.rplog.RPLog.LOGGER;
+import static fireflasher.rplog.RPLog.*;
 
-public class Optionsscreen_1_18_2 extends Screen {
+public class Optionsscreen_1_20_4 extends Screen {
 
     private final Screen previous;
 
     //ButtonWidth and ButtonHeight
-    static final int B_HEIGHT = 20;
-    static final int B_WIDTH =100;
+    public static final int B_HEIGHT = 20;
+    public static final int B_WIDTH =100;
     private final ServerConfig dummy = new ServerConfig("dummy", List.of("dummy"), List.of("dummy"));
+    private fireflasher.rplog.fabric.config.screens.ScrollPane scrollPane;
 
-    private ScrollPane scrollPane;
-    public Optionsscreen_1_18_2(Screen previous) {
-        super(new TranslatableComponent("rplog.config.optionscreen.title"));
+    public Optionsscreen_1_20_4(Screen previous) {
+        super(RPLog.translateAbleStrings.get("rplog.config.optionscreen.title"));
         this.previous = previous;
     }
 
@@ -49,8 +49,7 @@ public class Optionsscreen_1_18_2 extends Screen {
         addButtonsToScrollPane(serverConfigList);
         serverConfigList.remove(dummy);
 
-        Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT,
-                new TranslatableComponent("rplog.config.optionscreen.add_Server"),
+        Button addServer = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
                 button -> {
                     if ( Minecraft.getInstance().getConnection() != null && !Minecraft.getInstance().hasSingleplayerServer()) {
                         String address = Minecraft.getInstance().getConnection().getConnection().getRemoteAddress().toString();
@@ -67,26 +66,26 @@ public class Optionsscreen_1_18_2 extends Screen {
                         addButtonsToScrollPane(serverConfigList);
                         //Minecraft.getInstance().setScreen(new Optionsscreen_1_18_2(previous));
                     }
-                });
+                }).bounds(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT)
+                .build();
 
 
-        Button defaultconfigbutton = new Button(this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT,
-                new TranslatableComponent("rplog.config.screen.defaults"),
+        Button defaultconfigbutton = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
                 button -> {
                     ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),defaultConfig.getDefaultKeywords());
-                    Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, defaults));
-                });
+                    Minecraft.getInstance().setScreen(new Serverscreen_1_20_4(Minecraft.getInstance().screen, defaults));
+                }).bounds(this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT)
+                .build();
 
 
-        Button done = new Button(this.width / 2 + this.width / 4 - B_WIDTH/2, this.height - 30, B_WIDTH , B_HEIGHT,
-                new TranslatableComponent("rplog.config.screen.done"),
-                button -> onClose());
+        Button done = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.done"),
+                button -> onClose()).bounds(this.width / 2 + this.width / 4 - B_WIDTH/2, this.height - 30, B_WIDTH , B_HEIGHT)
+                .build();
 
-        Button openFolder = new Button(this.width / 2 - this.width / 4 - B_WIDTH/2, this.height - 30, B_WIDTH , B_HEIGHT,
-                new TranslatableComponent("rplog.config.optionscreen.open_LogFolder"),
-                button ->{
-                    openFolder(RPLog.getFolder());
-                    });
+        Button openFolder = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.open_LogFolder"),
+                button ->{openFolder(RPLog.getFolder());
+                }).bounds(this.width / 2 - this.width / 4 - B_WIDTH/2, this.height - 30, B_WIDTH , B_HEIGHT)
+                .build();
 
         addRenderableWidget(defaultconfigbutton);
         addRenderableWidget(addServer);
@@ -99,20 +98,20 @@ public class Optionsscreen_1_18_2 extends Screen {
         int currentPos = 30;
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
-            Button serverNameButton = new Button(this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
-                    Component.nullToEmpty(getServerNameShortener(server.getServerDetails().getServerNames())),
+            Button serverNameButton = Button.builder(Component.nullToEmpty(getServerNameShortener(server.getServerDetails().getServerNames())),
                     button ->{
                         if(!button.visible)return;
-                        Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, server));
-                    });
+                        Minecraft.getInstance().setScreen(new Serverscreen_1_20_4(Minecraft.getInstance().screen, server));
+                    }).bounds(this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT)
+                    .build();
 
 
-            Button delete = new Button(this.width / 2 + this.width / 4 - serverNameButton.getWidth() / 2, currentPos, serverNameButton.getWidth(), B_HEIGHT,
-                    new TranslatableComponent("rplog.config.screen.delete"),
+            Button delete = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.delete"),
                     button -> {
                         if(!button.visible)return;
                         Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, RPLog.CONFIG, server));
-                    });
+                    }).bounds(this.width / 2 + this.width / 4 - serverNameButton.getWidth() / 2, currentPos, serverNameButton.getWidth(), B_HEIGHT)
+                    .build();
 
             if (!serverConfigList.contains(dummy)) {
                 scrollPane.addButton(serverNameButton);
@@ -124,26 +123,24 @@ public class Optionsscreen_1_18_2 extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        //super.mouseScrolled(mouseX,mouseY,delta);
-        return scrollPane.mouseScrolled(mouseX,mouseY,delta);
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return scrollPane.mouseScrolled(mouseX,mouseY,scrollX,scrollY);
     }
 
+
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        // Render Order:
-        // First Background
-        this.renderBackground(poseStack);
-        fill(poseStack, 0, 50, this.width, this.height-50, 0xFF222222);
-        scrollPane.render(poseStack,mouseX,mouseY,partialTick);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
+        //fill(poseStack, 0, 50, this.width, this.height-50, 0xFF222222);
 
-        super.render(poseStack, mouseX, mouseY, partialTick);
 
-        TranslatableComponent serverlist = new TranslatableComponent("rplog.config.optionscreen.configuration_Servers");
-        TranslatableComponent deleteServer = new TranslatableComponent("rplog.config.optionscreen.delete_Servers");
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 18, 0xffffff);
-        drawCenteredString(poseStack, this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
-        drawCenteredString(poseStack, this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
+        Component serverlist = RPLog.translateAbleStrings.get("rplog.config.optionscreen.configuration_Servers");
+        Component deleteServer = RPLog.translateAbleStrings.get("rplog.config.optionscreen.delete_Servers");
+        //drawCenteredString(poseStack, this.font, this.title, this.width / 2, 18, 0xffffff);
+        //drawCenteredString(poseStack, this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
+        //drawCenteredString(poseStack, this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
     }
 
     public void openFolder(String folderPath) {
@@ -168,10 +165,10 @@ public class Optionsscreen_1_18_2 extends Screen {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                LOGGER.error(new TranslatableComponent("rplog.screens.optionscreen.openfolder_error"));
+                LOGGER.error(RPLog.translateAbleStrings.get("rplog.logger.optionscreen.openfolder_error"));
             }
         } else {
-            LOGGER.error(new TranslatableComponent("rplog.screens.optionscreen.openfolder_error"));
+            LOGGER.error(RPLog.translateAbleStrings.get("rplog.logger.optionscreen.openfolder_error"));
         }
     }
 
@@ -195,17 +192,18 @@ public class Optionsscreen_1_18_2 extends Screen {
         }
 
         public void init(){
-            Button delete = new Button(this.width / 2 - this.width / 4 - 50, this.height / 2, B_WIDTH, B_HEIGHT,
-                    new TranslatableComponent("rplog.config.optionscreen.verification.delete"),
+            Button delete = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.delete"),
                     button -> {
                         defaultConfig.removeServerFromList(serverConfig);
                         onClose();
                         //Minecraft.getInstance().setScreen(new Optionsscreen_1_18_2(previous));
-                    });
+                    }).bounds(this.width / 2 - this.width / 4 - 50, this.height / 2, B_WIDTH, B_HEIGHT)
+                    .build();
 
 
-            Button abort = new Button(this.width / 2 + this.width / 4 - 50, this.height / 2,B_WIDTH, B_HEIGHT,
-                    new TranslatableComponent("rplog.config.optionscreen.verification.cancel"), button -> onClose());
+            Button abort = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.cancel"),
+                    button -> onClose()).bounds(this.width / 2 + this.width / 4 - 50, this.height / 2,B_WIDTH, B_HEIGHT)
+                    .build();
 
             this.addRenderableWidget(delete);
             this.addRenderableWidget(abort);
@@ -213,11 +211,11 @@ public class Optionsscreen_1_18_2 extends Screen {
         }
 
         @Override
-        public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-            this.renderBackground(poseStack);
-            super.render(poseStack, mouseX, mouseY, partialTick);
-            TranslatableComponent verificationmessage = new TranslatableComponent("rplog.config.optionscreen.verification.message");
-            drawCenteredString(poseStack, this.font, verificationmessage, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
+        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
+            super.render(guiGraphics, mouseX, mouseY, partialTick);
+            Component verificationmessage = RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.message");
+            //drawCenteredString(poseStack, this.font, verificationmessage, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
         }
 
         @Override
@@ -227,3 +225,5 @@ public class Optionsscreen_1_18_2 extends Screen {
 
     }
 }
+
+#endif

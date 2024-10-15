@@ -7,5 +7,7 @@ public class InitClient {
 
         RPLog.CONFIG.setup();
         RPLog.CHATLOGGER.setup();
+
+        RPLog.init();
     }
 }

@@ -1,10 +1,9 @@
 package fireflasher.rplog.fabric;
 
-import fireflasher.rplog.RPLog;
+import fireflasher.rplog.*;
 import fireflasher.rplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -13,8 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static fireflasher.rplog.Chatlogger.*;
-import static fireflasher.rplog.RPLog.CONFIG;
 import static fireflasher.rplog.RPLog.LOGGER;
+import static fireflasher.rplog.RPLog.CONFIG;
 
 public class FabricChatLogger {
     private static String serverIP = "";
@@ -24,12 +23,6 @@ public class FabricChatLogger {
 
     public static void chatFilter(String chat){
 
-        // TODO: Debug
-        /*
-        for(String debug: channellist){
-            LOGGER.info(debug + " chatFilter");
-        }
-         */
         if( Minecraft.getInstance().getConnection() != null && !Minecraft.getInstance().hasSingleplayerServer()) servercheck();
         else{
             serverName = "Local";
@@ -73,7 +66,7 @@ public class FabricChatLogger {
                     path.mkdir();
                     log.createNewFile();
                 } catch (IOException e) {
-                    Component logger_creationwarning = new TranslatableComponent("rplog.logger.chatlogger.creation_warning");
+                    Component logger_creationwarning = RPLog.translateAbleStrings.get("rplog.logger.chatlogger.creation_warning");
                     LOGGER.warn(logger_creationwarning + log.toString());
                     error = true;
                 }
@@ -96,7 +89,7 @@ public class FabricChatLogger {
             timedmessage = chat;
 
         } catch (IOException e) {
-            TranslatableComponent logger_writewarning = new TranslatableComponent("rplog.logger.chatlogger.write_warning");
+            Component logger_writewarning = RPLog.translateAbleStrings.get("rplog.logger.chatlogger.write_warning");
             LOGGER.warn(logger_writewarning + log.toString());
         }
     }

@@ -22,6 +22,5 @@
   "rplog.logger.chatlogger.write_warning": "RPLog File couldnt be written: ",
   "rplog.logger.defaultconfig.config_create_error": "RPLog couldnt create config file",
 
-  "rplog.screens.optionscreen.openfolder_error": "RPLog couldnt open the log folder"
-
+  "rplog.logger.optionscreen.openfolder_error": "RPLog couldnt open the log folder"
 }
