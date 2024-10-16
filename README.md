@@ -15,7 +15,7 @@ The current pattern uses following scheme: \<m\>-\<x\>.\<y\>.\<z\>
 
 ### Feature implementation 
 The \<x\>.\<y\>.\<z\> releases have the same features implemented across the <m> version.
-This means, the release 1.18.2-6.1.0 has a new feature and bug fix, which 1.20.1-5.0.0 does not have, even tho, 1.20 is newer
+This means, the release <ins>1.18.2</ins>-**6.1.0** has a new feature and bug fix, which <ins>1.20.1</ins>-**5.0.0** does not have, even tho, 1.20 is newer
 
 ### Older versions
 Versions before \<m\>-4.2.0 can only be Configured with Modmenu from Terraformers: [github][1] or [modrinth][2]
