@@ -1,17 +1,12 @@
 package fireflasher.rplog.config.screens.options;
 
-#if MC_1_18_2 || MC_1_19_4
-import com.mojang.blaze3d.vertex.PoseStack;
-#elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
-import net.minecraft.client.gui.GuiGraphics;
-#endif
-
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
 import fireflasher.rplog.config.ScrollPane;
 import fireflasher.rplog.config.json.ServerConfig;
 import fireflasher.rplog.config.screens.servers.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -111,29 +106,10 @@ public class Optionsscreen extends Screen {
         }
     }
 
-    #if MC_1_18_2 || MC_1_19_4
-    @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(poseStack);
-        fill(poseStack, 0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
-        scrollPane.render(poseStack,mouseX,mouseY,partialTick);
 
-        super.render(poseStack, mouseX, mouseY, partialTick);
-
-        Component serverlist = RPLog.translateAbleStrings.get("rplog.config.optionscreen.configuration_Servers");
-        Component deleteServer = RPLog.translateAbleStrings.get("rplog.config.optionscreen.delete_Servers");
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 18, 0xffffff);
-        drawCenteredString(poseStack, this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
-        drawCenteredString(poseStack, this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
-    }
-    #else
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        #if MC_1_20_1
-        this.renderBackground(guiGraphics);
-        #elif MC_1_20_4 || MC_1_20_6
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
-        #endif
         guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -145,7 +121,7 @@ public class Optionsscreen extends Screen {
         guiGraphics.drawCenteredString(this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
         guiGraphics.drawCenteredString( this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
     }
-    #endif
+
     public void openFolder(String folderPath) {
         File folder = new File(folderPath);
 
@@ -181,25 +157,15 @@ public class Optionsscreen extends Screen {
         this.minecraft.setScreen(previous);
     }
 
-    #if MC_1_20_4 || MC_1_20_6
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return scrollPane.mouseScrolled(mouseX,mouseY,mouseX,mouseY);
     }
-    #else
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return scrollPane.mouseScrolled(mouseX,mouseY,delta);
-    }
-    #endif
 
 
     public static Button buttonBuilder(Component title, int x, int y, int width, int height, Button.OnPress onPress){
-        #if MC_1_18_2
-        return new Button(x,y,width,height,title,onPress);
-        #else
         return Button.builder(title,onPress).bounds(x,y,width,height).build();
-        #endif
     }
 
     public class Verification extends Screen{
@@ -233,27 +199,13 @@ public class Optionsscreen extends Screen {
 
         }
 
-        #if MC_1_18_2 || MC_1_19_4
-        @Override
-        public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-            this.renderBackground(poseStack);
-            super.render(poseStack, mouseX, mouseY, partialTick);
-            Component verificationmessage = RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.message");
-            drawCenteredString(poseStack, this.font, verificationmessage, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
-        }
-        #else
         @Override
         public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            #if MC_1_20_1
-            this.renderBackground(guiGraphics);
-            #elif MC_1_20_4 || MC_1_20_6
             this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
-            #endif
             super.render(guiGraphics, mouseX, mouseY, partialTick);
             Component verificationmessage = RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.message");
             guiGraphics.drawCenteredString(this.font, verificationmessage, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
         }
-        #endif
 
         @Override
         public void onClose(){

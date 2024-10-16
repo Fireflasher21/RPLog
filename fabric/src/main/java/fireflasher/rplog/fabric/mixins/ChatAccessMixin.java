@@ -8,19 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static fireflasher.rplog.Chatlogger.chatFilter;
 
-#if MC_1_18_2
-import java.util.UUID;
-import net.minecraft.client.gui.chat.StandardChatListener;
-import net.minecraft.network.chat.Component;
-
-@Mixin(StandardChatListener.class)
-public abstract class ChatAccessMixin {
-    @Inject(method = "handle", at = @At("HEAD"))
-    public void onChatMessage(ChatType type, Component message, UUID sender, CallbackInfo ci) {
-        if (type == ChatType.CHAT) chatFilter(message.getString());
-    }
-}
-#elif MC_1_19_4 || MC_1_20_1 || MC_1_20_4 || MC_1_20_6
 import net.minecraft.client.multiplayer.chat.ChatListener;
 import net.minecraft.client.multiplayer.chat.ChatTrustLevel;
 import com.mojang.authlib.GameProfile;
