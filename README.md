@@ -1,4 +1,8 @@
 # RPLog
+
+
+<img src="https://github.com/user-attachments/assets/d986eb02-9579-40da-83af-ac36a6420ea3" width="213" height="160" class="center"/>
+
 ## Description
 This Mod is a simple Log Plugin, which logs Keywords which you can specify before handed and while Playing.
 It saves the logs in sorted folders per Server and you can add a custom Keyword-List for each Server.
@@ -30,8 +34,6 @@ In my Case it was Aegorin and all the people who make this Server what it is. I 
 
 If you want to check out the Server here you go: [Aegorin][5]
 But keep in mind, that the Servers only language is German
-
-
 
 [1]:https://github.com/TerraformersMC/ModMenu
 [2]:https://modrinth.com/mod/modmenu
