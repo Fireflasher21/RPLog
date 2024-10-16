@@ -7,7 +7,7 @@ import java.util.List;
 
 #if MC_1_18_2 || MC_1_19_2
 import com.mojang.blaze3d.vertex.PoseStack;
-#elif  MC_1_20_1 || MC_1_20_4
+#elif  MC_1_20_1 || MC_1_20_4 || MC_1_20_6
 import net.minecraft.client.gui.GuiGraphics;
 #endif
 
@@ -50,7 +50,7 @@ public class ScrollPane {
         }
     }
 
-    #elif MC_1_20_1 || MC_1_20_4
+    #elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         int buttonY = 30; // Starting Y position for buttons
         int oldY = buttonY;
@@ -75,7 +75,7 @@ public class ScrollPane {
     #if MC_1_18_2 || MC_1_19_2 || MC_1_20_1
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         scrollOffset += delta * 10; // Adjust scroll speed
-    #elif MC_1_20_4
+    #elif MC_1_20_4 || MC_1_20_6
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         scrollOffset += scrollY * 10; // Adjust scroll speed
     #endif

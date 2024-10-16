@@ -11,11 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-#if MC_1_18_2 || MC_1_19_4
-import fireflasher.rplog.config.screens.options.Optionsscreen_1_18_2;
-#elif MC_1_20_4
-import fireflasher.rplog.config.screens.options.Optionsscreen_1_20_4;
-#endif
+
+import fireflasher.rplog.config.screens.options.*;
 
 @Mixin(PauseScreen.class)
 public abstract class PauseScreenMixin extends Screen {
@@ -34,8 +31,8 @@ public abstract class PauseScreenMixin extends Screen {
             Button accessModOption = new Button(0, 0, 35, 20,Component.nullToEmpty("RPL") , button -> {
                 Minecraft.getInstance().setScreen(screen);
             });
-            #elif MC_1_20_4
-            screen = new Optionsscreen_1_20_4(this);
+            #elif MC_1_20_1 || MC_1_20_4
+            screen = new Optionsscreen_1_20_1(this);
             Button accessModOption = new Button.Builder(Component.nullToEmpty("RPL"),
                     button -> {
                         Minecraft.getInstance().setScreen(screen);

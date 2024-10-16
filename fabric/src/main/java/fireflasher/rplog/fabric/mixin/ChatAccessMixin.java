@@ -7,11 +7,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static fireflasher.rplog.Chatlogger.chatFilter;
+
 #if MC_1_18_2
 import java.util.UUID;
 import net.minecraft.client.gui.chat.StandardChatListener;
-
-import static fireflasher.rplog.Chatlogger.chatFilter;
 
 @Mixin(StandardChatListener.class)
 public abstract class ChatAccessMixin {
@@ -31,9 +31,8 @@ public abstract class ChatAccessMixin {
         if (bound.chatType().equals(ChatType.CHAT)) chatFilter(chatMessage.signedContent().toString());
     }
 }
-#elif MC_1_20_4
+#elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
 import net.minecraft.client.multiplayer.chat.ChatListener;
-import java.util.function.BooleanSupplier;
 import net.minecraft.client.multiplayer.chat.ChatTrustLevel;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.network.chat.PlayerChatMessage;
@@ -45,4 +44,6 @@ public abstract class ChatAccessMixin {
         if (bound.chatType().equals(ChatType.CHAT)) chatFilter(chatMessage.signedContent());
     }
 }
+
+
 #endif

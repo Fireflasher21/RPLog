@@ -26,7 +26,7 @@ public abstract class PauseScreenMixin extends Screen {
         });
         addRenderableWidget(accessModOption);
     }
-    #elif MC_1_20_1
+    #elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
     @Inject(method = ("createPauseMenu"), at = @At("HEAD"))
     public void createPauseMenu(CallbackInfo callbackInfo){
         Button accessModOption = Button.builder(Component.nullToEmpty("RPL"), button -> {

@@ -15,12 +15,14 @@ configurations {
 }
 
 repositories {
-    maven { url "https://maven.terraformersmc.com" }
+    maven { name = "ModMenu";url "https://maven.terraformersmc.com" }
+    maven { name = "Nucleoid";url "https://maven.nucleoid.xyz/" }
 }
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric}"
     modImplementation "com.terraformersmc:modmenu:${parent.props.mod_menu_version}"
+    modImplementation "eu.pb4:placeholder-api:${parent.props.modmenu_text_placeholder_api}"
     modApi "net.fabricmc.fabric-api:fabric-api:${parent.props.fabric}+${rootProject.minecraft}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }

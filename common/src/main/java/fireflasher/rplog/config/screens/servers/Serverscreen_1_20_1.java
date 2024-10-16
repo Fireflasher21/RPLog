@@ -1,7 +1,7 @@
 package fireflasher.rplog.config.screens.servers;
 
 
-#if MC_1_20_1 || MC_1_20_4
+#if MC_1_20_1 || MC_1_20_4 || MC_1_20_6
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.ScrollPane;
 import fireflasher.rplog.config.json.ServerConfig;
@@ -106,7 +106,11 @@ public class Serverscreen_1_20_1 extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        #if MC_1_20_1
         this.renderBackground(guiGraphics);
+        #elif MC_1_20_4 || MC_1_20_6
+        this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
+        #endif
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
@@ -125,9 +129,10 @@ public class Serverscreen_1_20_1 extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         return scrollPane.mouseScrolled(mouseX,mouseY,delta);
     }
-    #elif MC_1_20_6
+    #elif MC_1_20_4 || MC_1_20_6
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return scrollPane.mouseScrolled(mouseX,mouseY,mouseX,mouseY);
     }
     #endif
 
