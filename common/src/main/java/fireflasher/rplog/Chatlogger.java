@@ -218,10 +218,11 @@ public class Chatlogger {
                 if(filename.equals(sourceFolder.getName()));
                 else{
                     try {
+                        Path target = Path.of(newFolder + path1.toString().replace(sourceFolder.toString(), ""));
                         if (Files.isRegularFile(path1))
-                            Files.move(path1, Path.of(newFolder + path1.toString().replace(sourceFolder.toString(),"")));
+                            Files.move(path1, target);
                         if (Files.isDirectory(path1)) {
-                            Files.createDirectory(Path.of(newFolder + path1.toString().replace(sourceFolder.toString(),"")));
+                            Files.createDirectory(target);
                             folderstodelete.add(path1);
                         }
                     } catch (IOException e) {
@@ -242,7 +243,7 @@ public class Chatlogger {
     public static String getShortestNameOfList(List<String> domainList){
         String name = "";
         //if list only 1 in size, skip
-        if(domainList.size() >= 1){
+        if(!domainList.isEmpty()){
             //Iterate over domainList
             for(String domain:domainList){
                 //always get main domain, no subdomain

@@ -89,7 +89,6 @@ public class Optionsscreen extends Screen {
                     Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
                     button ->{
                         if(!button.visible)return;
-                        LOGGER.warn(server);
                         Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
                     });
 
