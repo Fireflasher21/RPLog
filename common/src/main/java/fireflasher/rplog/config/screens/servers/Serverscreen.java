@@ -18,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 
 import static fireflasher.rplog.Chatlogger.*;
-import static fireflasher.rplog.config.screens.options.Optionsscreen_1_18_2.borderOffsetFill;
 import static fireflasher.rplog.config.screens.options.Optionsscreen.*;
 
 public class Serverscreen extends Screen {

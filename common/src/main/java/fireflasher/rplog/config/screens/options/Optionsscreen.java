@@ -196,7 +196,7 @@ public class Optionsscreen extends Screen {
 
     public static Button buttonBuilder(Component title, int x, int y, int width, int height, Button.OnPress onPress){
         #if MC_1_18_2
-            Button delete = new Button(x,y,width,height,title,onPress);
+        return new Button(x,y,width,height,title,onPress);
         #else
         return Button.builder(title,onPress).bounds(x,y,width,height).build();
         #endif
