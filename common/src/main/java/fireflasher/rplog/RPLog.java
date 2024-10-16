@@ -1,14 +1,8 @@
 package fireflasher.rplog;
 
 import fireflasher.rplog.config.DefaultConfig;
-import fireflasher.rplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.multiplayer.ServerSelectionList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
-import net.minecraft.network.protocol.game.ClientboundLoginPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
-import net.minecraft.server.network.ServerPlayerConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

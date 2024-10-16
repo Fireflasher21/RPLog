@@ -1,13 +1,13 @@
-package fireflasher.rplog.fabric.config.screens;
+package fireflasher.rplog.config;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
-#if MC_1_20_4
+
+#if MC_1_18_2 || MC_1_19_2
+import com.mojang.blaze3d.vertex.PoseStack;
+#elif  MC_1_20_1 || MC_1_20_4
 import net.minecraft.client.gui.GuiGraphics;
 #endif
 
@@ -50,7 +50,7 @@ public class ScrollPane {
         }
     }
 
-    #elif MC_1_20_4
+    #elif MC_1_20_1 || MC_1_20_4
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         int buttonY = 30; // Starting Y position for buttons
         int oldY = buttonY;
@@ -72,7 +72,7 @@ public class ScrollPane {
 
     #endif
 
-    #if MC_1_18_2 || MC_1_19_2
+    #if MC_1_18_2 || MC_1_19_2 || MC_1_20_1
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         scrollOffset += delta * 10; // Adjust scroll speed
     #elif MC_1_20_4

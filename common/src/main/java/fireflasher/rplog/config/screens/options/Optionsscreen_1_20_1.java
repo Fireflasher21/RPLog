@@ -1,11 +1,11 @@
-package fireflasher.rplog.fabric.config.screens.options;
+package fireflasher.rplog.config.screens.options;
 
-#if MC_1_20_4
+#if MC_1_20_1 || MC_1_20_4
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
+import fireflasher.rplog.config.ScrollPane;
 import fireflasher.rplog.config.json.ServerConfig;
-import fireflasher.rplog.fabric.config.screens.ScrollPane;
-import fireflasher.rplog.fabric.config.screens.servers.Serverscreen_1_20_4;
+import fireflasher.rplog.config.screens.servers.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -16,12 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import java.util.regex.Pattern;
-
 import static fireflasher.rplog.Chatlogger.*;
 import static fireflasher.rplog.RPLog.*;
 
-public class Optionsscreen_1_20_4 extends Screen {
+public class Optionsscreen_1_20_1 extends Screen {
 
     private final Screen previous;
 
@@ -29,9 +27,9 @@ public class Optionsscreen_1_20_4 extends Screen {
     public static final int B_HEIGHT = 20;
     public static final int B_WIDTH =100;
     private final ServerConfig dummy = new ServerConfig("dummy", List.of("dummy"), List.of("dummy"));
-    private fireflasher.rplog.fabric.config.screens.ScrollPane scrollPane;
+    private ScrollPane scrollPane;
 
-    public Optionsscreen_1_20_4(Screen previous) {
+    public Optionsscreen_1_20_1(Screen previous) {
         super(RPLog.translateAbleStrings.get("rplog.config.optionscreen.title"));
         this.previous = previous;
     }
@@ -54,15 +52,13 @@ public class Optionsscreen_1_20_4 extends Screen {
                         defaultConfig.addServerToList(address[1], address[0]);
                         defaultConfig.loadConfig();
                         addButtonsToScrollPane(serverConfigList);
-                    }
-                }).bounds(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT)
+                    }).bounds(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT)
                 .build();
-
 
         Button defaultconfigbutton = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
                 button -> {
                     ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),defaultConfig.getDefaultKeywords());
-                    Minecraft.getInstance().setScreen(new Serverscreen_1_20_4(Minecraft.getInstance().screen, defaults));
+                    Minecraft.getInstance().setScreen(new Serverscreen_1_20_1(Minecraft.getInstance().screen, defaults));
                 }).bounds(this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT)
                 .build();
 
@@ -87,10 +83,10 @@ public class Optionsscreen_1_20_4 extends Screen {
         int currentPos = 30;
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
-            Button serverNameButton = Button.builder(Component.nullToEmpty(getServerNameShortener(server.getServerDetails().getServerNames())),
+            Button serverNameButton = Button.builder(Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
                     button ->{
                         if(!button.visible)return;
-                        Minecraft.getInstance().setScreen(new Serverscreen_1_20_4(Minecraft.getInstance().screen, server));
+                        Minecraft.getInstance().setScreen(new Serverscreen_1_20_1(Minecraft.getInstance().screen, server));
                     }).bounds(this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT)
                     .build();
 
@@ -111,25 +107,20 @@ public class Optionsscreen_1_20_4 extends Screen {
         }
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        return scrollPane.mouseScrolled(mouseX,mouseY,scrollX,scrollY);
-    }
-
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
+        this.renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
-        //fill(poseStack, 0, 50, this.width, this.height-50, 0xFF222222);
+        guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
 
 
         Component serverlist = RPLog.translateAbleStrings.get("rplog.config.optionscreen.configuration_Servers");
         Component deleteServer = RPLog.translateAbleStrings.get("rplog.config.optionscreen.delete_Servers");
-        //drawCenteredString(poseStack, this.font, this.title, this.width / 2, 18, 0xffffff);
-        //drawCenteredString(poseStack, this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
-        //drawCenteredString(poseStack, this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 18, 0xffffff);
+        guiGraphics.drawCenteredString(this.font, serverlist, this.width / 2 - this.width / 4, 40, 0xffffff);
+        guiGraphics.drawCenteredString( this.font, deleteServer, this.width / 2 + this.width / 4, 40, 0xffffff);
     }
 
     public void openFolder(String folderPath) {
@@ -167,6 +158,19 @@ public class Optionsscreen_1_20_4 extends Screen {
         this.minecraft.setScreen(previous);
     }
 
+    #if MC_1_20_1
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+
+        return scrollPane.mouseScrolled(mouseX,mouseY,delta);
+    }
+    #elif MC_1_20_6
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return scrollPane.mouseScrolled(mouseX,mouseY,scrollX,scrollY);
+    }
+    #endif
+
     public class Verification extends Screen{
 
         private final Screen previous;
@@ -201,10 +205,10 @@ public class Optionsscreen_1_20_4 extends Screen {
 
         @Override
         public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
+            this.renderBackground(guiGraphics);
             super.render(guiGraphics, mouseX, mouseY, partialTick);
             Component verificationmessage = RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.message");
-            //drawCenteredString(poseStack, this.font, verificationmessage, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
+            guiGraphics.drawCenteredString(this.font, verificationmessage, this.width / 2, this.height / 2 - this.height / 4, 0xffffff);
         }
 
         @Override

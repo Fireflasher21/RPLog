@@ -1,11 +1,11 @@
-package fireflasher.rplog.fabric.config.screens.servers;
+package fireflasher.rplog.config.screens.servers;
 
 
 #if MC_1_18_2 || MC_1_19_2
 import fireflasher.rplog.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.rplog.config.json.ServerConfig;
-import fireflasher.rplog.fabric.config.screens.ScrollPane;
+import fireflasher.rplog.config.ScrollPane;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -15,8 +15,8 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 
 import static fireflasher.rplog.Chatlogger.*;
-import static fireflasher.rplog.fabric.config.screens.options.Optionsscreen_1_18_2.B_WIDTH;
-import static fireflasher.rplog.fabric.config.screens.options.Optionsscreen_1_18_2.B_HEIGHT;
+import static fireflasher.rplog.config.screens.options.Optionsscreen_1_18_2.*;
+
 
 public class Serverscreen_1_18_2 extends Screen {
 

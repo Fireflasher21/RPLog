@@ -1,10 +1,10 @@
-package fireflasher.rplog.fabric.config.screens.servers;
+package fireflasher.rplog.config.screens.servers;
 
 
-#if MC_1_20_4
+#if MC_1_20_1 || MC_1_20_4
 import fireflasher.rplog.*;
+import fireflasher.rplog.config.ScrollPane;
 import fireflasher.rplog.config.json.ServerConfig;
-import fireflasher.rplog.fabric.config.screens.ScrollPane;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -15,17 +15,17 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 
 import static fireflasher.rplog.Chatlogger.*;
-import static fireflasher.rplog.fabric.config.screens.options.Optionsscreen_1_20_4.B_HEIGHT;
-import static fireflasher.rplog.fabric.config.screens.options.Optionsscreen_1_20_4.B_WIDTH;
+import static fireflasher.rplog.config.screens.options.Optionsscreen_1_20_1.B_HEIGHT;
+import static fireflasher.rplog.config.screens.options.Optionsscreen_1_20_1.B_WIDTH;
 
-public class Serverscreen_1_20_4 extends Screen {
+public class Serverscreen_1_20_1 extends Screen {
 
     private final Screen previous;
     private final ServerConfig serverConfig;
     private ScrollPane scrollPane;
 
-    public Serverscreen_1_20_4(Screen previous, ServerConfig serverConfig) {
-        super(Component.nullToEmpty(getServerNameShortener(serverConfig.getServerDetails().getServerNames())));
+    public Serverscreen_1_20_1(Screen previous, ServerConfig serverConfig) {
+        super(Component.nullToEmpty(getShortestNameOfList(serverConfig.getServerDetails().getServerNames())));
         this.previous = previous;
         this.serverConfig = serverConfig;
     }
@@ -49,7 +49,7 @@ public class Serverscreen_1_20_4 extends Screen {
                 button -> {
                     serverConfig.getServerDetails().getServerKeywords().clear();
                     serverConfig.getServerDetails().getServerKeywords().addAll(RPLog.CONFIG.getDefaultKeywords());
-                    Minecraft.getInstance().setScreen(new Serverscreen_1_20_4(previous, serverConfig));
+                    Minecraft.getInstance().setScreen(new Serverscreen_1_20_1(previous, serverConfig));
                 }).bounds(this.width / 2 - this.width / 4 - B_WIDTH/2, 13, B_WIDTH, B_HEIGHT)
                 .build();
 
@@ -69,9 +69,7 @@ public class Serverscreen_1_20_4 extends Screen {
                     if(!keywords.contains(insert.getValue()) && !insert.getValue().isEmpty()){
                         keywords.add(insert.getValue());
                         insert.setValue("");
-                        //serverConfig.setServerDetails(serverDetails);
                         addButtonsToScrollPane(serverDetails);
-                        //Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(previous, serverConfig));
                     }}).bounds(this.width / 2 + this.width / 4 - insert.getWidth() / 2, insert.getY(), insert.getWidth(), B_HEIGHT)
                 .build();
 
@@ -91,8 +89,6 @@ public class Serverscreen_1_20_4 extends Screen {
                     button -> {
                         if(!button.visible)return;
                         keywords.remove(keyword);
-                        //serverConfig.setServerDetails(serverDetails);
-                        //Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(previous, serverConfig));
                         addButtonsToScrollPane(serverDetails);
                     }).bounds(this.width / 2 + this.width / 4 - B_WIDTH / 2, i - 5, B_WIDTH, B_HEIGHT)
                     .build();
@@ -110,23 +106,30 @@ public class Serverscreen_1_20_4 extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics, mouseX,mouseY,partialTick);
+        this.renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        //(poseStack, 0, 50, this.width, this.height-50, 0xFF222222);
+        guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
         int lengthOfTitle = this.title.getContents().toString().length();
-        //(guiGraphics, this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        return scrollPane.mouseScrolled(mouseX,mouseY,scrollX,scrollY);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
     }
 
     @Override
     public void onClose(){
         this.minecraft.setScreen(previous);
     }
+
+    #if MC_1_20_1
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        return scrollPane.mouseScrolled(mouseX,mouseY,delta);
+    }
+    #elif MC_1_20_6
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+    }
+    #endif
 
 
 }

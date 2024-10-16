@@ -10,7 +10,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fireflasher.rplog.fabric.config.screens.options.*;
+
+#if MC_1_18_2 || MC_1_19_4
+import fireflasher.rplog.config.screens.options.Optionsscreen_1_18_2;
+#elif MC_1_20_4
+import fireflasher.rplog.config.screens.options.Optionsscreen_1_20_4;
+#endif
 
 @Mixin(PauseScreen.class)
 public abstract class PauseScreenMixin extends Screen {

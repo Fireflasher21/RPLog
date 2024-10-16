@@ -1,12 +1,12 @@
-package fireflasher.rplog.fabric.config.screens.options;
+package fireflasher.rplog.config.screens.options;
 
 #if MC_1_18_2 || MC_1_19_2
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
 import fireflasher.rplog.config.json.ServerConfig;
-import fireflasher.rplog.fabric.config.screens.ScrollPane;
-import fireflasher.rplog.fabric.config.screens.servers.Serverscreen_1_18_2;
+import fireflasher.rplog.config.ScrollPane;
+import fireflasher.rplog.config.screens.servers.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
