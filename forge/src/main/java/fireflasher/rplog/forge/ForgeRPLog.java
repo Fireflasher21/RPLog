@@ -17,12 +17,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.function.BiFunction;
 import fireflasher.rplog.config.screens.options.*;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
-#if MC_1_18_2
-import net.minecraftforge.client.ConfigGuiHandler;
-#elif MC_1_19_2 || MC_1_20_1
-import net.minecraftforge.client.ConfigScreenHandler;
-#endif
+
 @Mod("rplog")
 public class ForgeRPLog {
     public ForgeRPLog() {
@@ -38,28 +35,13 @@ public class ForgeRPLog {
     }
 
     private void registerConfigScreen(){
-        #if MC_1_18_2
         ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
                 () -> new ConfigGuiHandler.ConfigGuiFactory(new BiFunction<Minecraft, Screen, Screen>() {
                     @Override
                     public Screen apply(Minecraft mc, Screen screen) {
-                        return new Optionsscreen_1_18_2(Minecraft.getInstance().screen);
+                        return new Optionsscreen(Minecraft.getInstance().screen);
                     }
                 }));
-        #elif MC_1_19_2 || MC_1_20_1
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory(new BiFunction<Minecraft, Screen, Screen>() {
-                    @Override
-                    public Screen apply(Minecraft mc, Screen screen) {
-                        #if MC_1_19_2
-                        return new Optionsscreen_1_18_2(Minecraft.getInstance().screen);
-                        #elif MC_1_20_1
-                        return new Optionsscreen_1_20_1(Minecraft.getInstance().screen);
-                        #endif
-                    }
-                }));
-
-        #endif
     }
 
     @SubscribeEvent

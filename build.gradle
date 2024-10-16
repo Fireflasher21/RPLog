@@ -45,7 +45,7 @@ allprojects {
 
     java {
         withSourcesJar()
-        sourceCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_16
         targetCompatibility = JavaVersion.toVersion(project.props.java)
     }
 

@@ -1,6 +1,6 @@
 package fireflasher.rplog.config.screens.options;
 
-#if MC_1_18_2 || MC_1_19_2
+#if MC_1_17_1
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
@@ -20,17 +20,17 @@ import java.util.List;
 import static fireflasher.rplog.Chatlogger.*;
 import static fireflasher.rplog.RPLog.*;
 
-public class Optionsscreen_1_18_2 extends Screen {
+public class Optionsscreen extends Screen {
 
     private final Screen previous;
 
     //ButtonWidth and ButtonHeight
     public static final int B_HEIGHT = 20;
     public static final int B_WIDTH =100;
-    private int borderOffsetFill = 50;
+    public static final int borderOffsetFill = 50;
     private ScrollPane scrollPane;
 
-    public Optionsscreen_1_18_2(Screen previous) {
+    public Optionsscreen(Screen previous) {
         super(RPLog.translateAbleStrings.get("rplog.config.optionscreen.title"));
         this.previous = previous;
     }
@@ -61,7 +61,7 @@ public class Optionsscreen_1_18_2 extends Screen {
                 RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
                 button -> {
                     ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),defaultConfig.getDefaultKeywords());
-                    Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, defaults));
+                    Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
                 });
 
 
@@ -90,7 +90,7 @@ public class Optionsscreen_1_18_2 extends Screen {
                     button ->{
                         if(!button.visible)return;
                         LOGGER.warn(server);
-                        Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, server));
+                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
                     });
 
 

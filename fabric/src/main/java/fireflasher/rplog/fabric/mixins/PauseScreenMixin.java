@@ -25,19 +25,9 @@ public abstract class PauseScreenMixin extends Screen {
     @Inject(method = ("createPauseMenu"), at = @At("HEAD"))
     public void createPauseMenu(CallbackInfo callbackInfo){
         if(!FabricLoader.getInstance().isModLoaded("modmenu")) {
-            Screen screen;
-            #if MC_1_18_2 || MC_1_19_2
-            screen = new Optionsscreen_1_18_2(this);
             Button accessModOption = new Button(0, 0, 35, 20,Component.nullToEmpty("RPL") , button -> {
-                Minecraft.getInstance().setScreen(screen);
+                Minecraft.getInstance().setScreen(new Optionsscreen(this));
             });
-            #elif MC_1_20_1 || MC_1_20_4
-            screen = new Optionsscreen_1_20_1(this);
-            Button accessModOption = new Button.Builder(Component.nullToEmpty("RPL"),
-                    button -> {
-                        Minecraft.getInstance().setScreen(screen);
-                    }).bounds(0,0,35,20).build();
-            #endif
 
             addRenderableWidget(accessModOption);
         }
