@@ -1,7 +1,7 @@
 package fireflasher.rplog.config.screens.servers;
 
 
-#if MC_1_17_1
+#if MC_1_16_5
 import fireflasher.rplog.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.rplog.config.json.ServerConfig;
@@ -75,10 +75,10 @@ public class Serverscreen extends Screen {
                         //Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(previous, serverConfig));
                     }});
 
-        addRenderableWidget(add);
-        addRenderableWidget(insert);
-        addRenderableWidget(done);
-        addRenderableWidget(reset);
+        addButton(add);
+        addButton(insert);
+        addButton(done);
+        addButton(reset);
     }
 
     private void addButtonsToScrollPane(ServerConfig.ServerDetails serverDetails){

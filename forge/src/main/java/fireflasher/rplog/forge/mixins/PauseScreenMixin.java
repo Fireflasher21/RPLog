@@ -23,6 +23,6 @@ public abstract class PauseScreenMixin extends Screen {
         Button accessModOption = new Button(0, 0, 35, 20, Component.nullToEmpty("RPL"), button -> {
             Minecraft.getInstance().setScreen(new Optionsscreen(this));
         });
-        addRenderableWidget(accessModOption);
+        addButton(accessModOption);
     }
 }

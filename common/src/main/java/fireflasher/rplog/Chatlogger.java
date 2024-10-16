@@ -8,9 +8,11 @@ import net.minecraft.network.chat.Component;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -60,7 +62,7 @@ public class Chatlogger {
         //when no config was found, set ad
         else{
             //get main domain of address and set as serverName
-            serverName = getShortestNameOfList(List.of(address[0]));
+            serverName = getShortestNameOfList(Arrays.asList(address[0]));
             //set keywords to default of config
             keywordList = CONFIG.getDefaultKeywords();
         }
@@ -218,10 +220,11 @@ public class Chatlogger {
                 if(filename.equals(sourceFolder.getName()));
                 else{
                     try {
+                        Path target = Paths.get(newFolder + path1.toString().replace(sourceFolder.toString(), ""));
                         if (Files.isRegularFile(path1))
-                            Files.move(path1, Path.of(newFolder + path1.toString().replace(sourceFolder.toString(),"")));
+                            Files.move(path1, target);
                         if (Files.isDirectory(path1)) {
-                            Files.createDirectory(Path.of(newFolder + path1.toString().replace(sourceFolder.toString(),"")));
+                            Files.createDirectory(target);
                             folderstodelete.add(path1);
                         }
                     } catch (IOException e) {

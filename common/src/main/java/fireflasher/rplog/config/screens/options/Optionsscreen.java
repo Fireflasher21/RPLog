@@ -1,6 +1,6 @@
 package fireflasher.rplog.config.screens.options;
 
-#if MC_1_17_1
+#if MC_1_16_5
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -60,7 +61,7 @@ public class Optionsscreen extends Screen {
         Button defaultconfigbutton = new Button(this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT,
                 RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
                 button -> {
-                    ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),defaultConfig.getDefaultKeywords());
+                    ServerConfig defaults = new ServerConfig("Defaults", Arrays.asList("Defaults"),defaultConfig.getDefaultKeywords());
                     Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
                 });
 
@@ -74,10 +75,10 @@ public class Optionsscreen extends Screen {
                 button ->{openFolder(RPLog.getFolder());
                 });
 
-        addRenderableWidget(defaultconfigbutton);
-        addRenderableWidget(addServer);
-        addRenderableWidget(done);
-        addRenderableWidget(openFolder);
+        addButton(defaultconfigbutton);
+        addButton(addServer);
+        addButton(done);
+        addButton(openFolder);
     }
 
     private void addButtonsToScrollPane(List<ServerConfig> serverConfigList){
@@ -89,7 +90,6 @@ public class Optionsscreen extends Screen {
                     Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
                     button ->{
                         if(!button.visible)return;
-                        LOGGER.warn(server);
                         Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
                     });
 
@@ -192,8 +192,8 @@ public class Optionsscreen extends Screen {
             Button abort = new Button(this.width / 2 + this.width / 4 - 50, this.height / 2,B_WIDTH, B_HEIGHT,
                     RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.cancel"), button -> onClose());
 
-            this.addRenderableWidget(delete);
-            this.addRenderableWidget(abort);
+            this.addButton(delete);
+            this.addButton(abort);
 
         }
 

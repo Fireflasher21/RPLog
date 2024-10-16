@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.jmx.Server;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -129,7 +130,7 @@ public class DefaultConfig {
         }
 
         //if no entry has been made yet
-        ServerConfig server = new ServerConfig(serverIp, List.of(serverName), defaultKeywords);
+        ServerConfig server = new ServerConfig(serverIp, Arrays.asList(serverName), defaultKeywords);
         serverList.add(server);
         saveConfig();
 
@@ -141,7 +142,7 @@ public class DefaultConfig {
     }
 
     public ServerConfig getServerObject(String serverIp) {
-        List<ServerConfig> serverConfigList = serverList.stream().filter(sC -> sC.getServerIp().equals(serverIp)).toList();
+        List<ServerConfig> serverConfigList = serverList.stream().filter(sC -> sC.getServerIp().equals(serverIp)).collect(Collectors.toList());
         return serverConfigList.isEmpty() ? null : serverConfigList.get(0);
     }
 

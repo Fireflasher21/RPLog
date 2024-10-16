@@ -9,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -17,7 +18,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.function.BiFunction;
 import fireflasher.rplog.config.screens.options.*;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
 
 @Mod("rplog")
@@ -35,13 +35,9 @@ public class ForgeRPLog {
     }
 
     private void registerConfigScreen(){
-        ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                () -> new ConfigGuiHandler.ConfigGuiFactory(new BiFunction<Minecraft, Screen, Screen>() {
-                    @Override
-                    public Screen apply(Minecraft mc, Screen screen) {
-                        return new Optionsscreen(Minecraft.getInstance().screen);
-                    }
-                }));
+        ModLoadingContext.get().registerExtensionPoint(
+                ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, screen) -> new Optionsscreen(screen)
+        );
     }
 
     @SubscribeEvent
