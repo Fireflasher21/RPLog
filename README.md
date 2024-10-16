@@ -7,18 +7,18 @@ If no list is configured for a specific Server, the Mod uses the a default List 
 ## Versioning
 
 ### Release pattern
-The current pattern uses following scheme: <m>-<x>.<y>.<z>
+The current pattern uses following scheme: \<m\>-\<x\>.\<y\>.\<z\>
 - m: minecraft version
 - x: major release version
 - y: minor release version
 - z: patch of minor release version
 
 ### Feature implementation 
-The <x>.<y>.<z> releases have the same features implemented across the <m> version.
+The \<x\>.\<y\>.\<z\> releases have the same features implemented across the <m> version.
 This means, the release 1.18.2-6.1.0 has a new feature and bug fix, which 1.20.1-5.0.0 does not have, even tho, 1.20 is newer
 
 ### Older versions
-Versions before <m>-4.2.0 can only be Configured with Modmenu from Terraformers: [github][1] or [modrinth][2]
+Versions before \<m\>-4.2.0 can only be Configured with Modmenu from Terraformers: [github][1] or [modrinth][2]
 
 ## Issues, Bugs or Crashes
 If you experience any Crashes or Bugs open an [Issue][3] or join the [Discord][4]. 
