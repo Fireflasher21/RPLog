@@ -1,6 +1,6 @@
 package fireflasher.rplog.config.screens.options;
 
-#if MC_1_18_2 || MC_1_19_2
+#if MC_1_18_2 ||  MC_1_19_4
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
@@ -27,7 +27,7 @@ public class Optionsscreen_1_18_2 extends Screen {
     //ButtonWidth and ButtonHeight
     public static final int B_HEIGHT = 20;
     public static final int B_WIDTH =100;
-    private int borderOffsetFill = 50;
+    public static final int borderOffsetFill = 50;
     private ScrollPane scrollPane;
 
     public Optionsscreen_1_18_2(Screen previous) {
@@ -44,6 +44,7 @@ public class Optionsscreen_1_18_2 extends Screen {
         scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,borderOffsetFill+5);
         addButtonsToScrollPane(serverConfigList);
 
+        #if MC_1_18_2
         Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT,
                 RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
                 button -> {
@@ -73,7 +74,37 @@ public class Optionsscreen_1_18_2 extends Screen {
                 RPLog.translateAbleStrings.get("rplog.config.optionscreen.open_LogFolder"),
                 button ->{openFolder(RPLog.getFolder());
                 });
+        #elif MC_1_19_4
 
+        Button addServer = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
+                        button -> {
+                            String[] address = Chatlogger.getCurrentServerIP();
+                            if(address == null)return;
+
+                            defaultConfig.addServerToList(address[1], address[0]);
+                            defaultConfig.loadConfig();
+                            addButtonsToScrollPane(serverConfigList);
+                        }).bounds(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT)
+                .build();
+
+        Button defaultconfigbutton = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
+                        button -> {
+                            ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),defaultConfig.getDefaultKeywords());
+                            Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, defaults));
+                        }).bounds(this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT)
+                .build();
+
+
+        Button done = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.done"),
+                        button -> onClose()).bounds(this.width / 2 + this.width / 4 - B_WIDTH/2, this.height - 30, B_WIDTH , B_HEIGHT)
+                .build();
+
+        Button openFolder = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.open_LogFolder"),
+                        button ->{openFolder(RPLog.getFolder());
+                        }).bounds(this.width / 2 - this.width / 4 - B_WIDTH/2, this.height - 30, B_WIDTH , B_HEIGHT)
+                .build();
+
+        #endif
         addRenderableWidget(defaultconfigbutton);
         addRenderableWidget(addServer);
         addRenderableWidget(done);
@@ -85,11 +116,11 @@ public class Optionsscreen_1_18_2 extends Screen {
         int currentPos = 30;
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
+            #if MC_1_18_2
             Button serverNameButton = new Button(this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
                     Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
                     button ->{
                         if(!button.visible)return;
-                        LOGGER.warn(server);
                         Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, server));
                     });
 
@@ -100,8 +131,22 @@ public class Optionsscreen_1_18_2 extends Screen {
                         if(!button.visible)return;
                         Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, RPLog.CONFIG, server));
                     });
+            #elif MC_1_19_4
+            Button serverNameButton = Button.builder(Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
+                            button ->{
+                                if(!button.visible)return;
+                                Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, server));
+                            }).bounds(this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT)
+                    .build();
 
 
+            Button delete = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.delete"),
+                            button -> {
+                                if(!button.visible)return;
+                                Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, RPLog.CONFIG, server));
+                            }).bounds(this.width / 2 + this.width / 4 - serverNameButton.getWidth() / 2, currentPos, serverNameButton.getWidth(), B_HEIGHT)
+                    .build();
+            #endif
             scrollPane.addButton(serverNameButton);
             scrollPane.addButton(delete);
             addWidget(serverNameButton);
@@ -180,6 +225,7 @@ public class Optionsscreen_1_18_2 extends Screen {
         }
 
         public void init(){
+            #if MC_1_18_2
             Button delete = new Button(this.width / 2 - this.width / 4 - 50, this.height / 2, B_WIDTH, B_HEIGHT,
                     RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.delete"),
                     button -> {
@@ -191,7 +237,20 @@ public class Optionsscreen_1_18_2 extends Screen {
 
             Button abort = new Button(this.width / 2 + this.width / 4 - 50, this.height / 2,B_WIDTH, B_HEIGHT,
                     RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.cancel"), button -> onClose());
+            #elif MC_1_19_4
+            Button delete = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.delete"),
+                            button -> {
+                                defaultConfig.removeServerFromList(serverConfig);
+                                onClose();
+                                //Minecraft.getInstance().setScreen(new Optionsscreen_1_18_2(previous));
+                            }).bounds(this.width / 2 - this.width / 4 - 50, this.height / 2, B_WIDTH, B_HEIGHT)
+                    .build();
 
+
+            Button abort = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.verification.cancel"),
+                            button -> onClose()).bounds(this.width / 2 + this.width / 4 - 50, this.height / 2,B_WIDTH, B_HEIGHT)
+                    .build();
+            #endif
             this.addRenderableWidget(delete);
             this.addRenderableWidget(abort);
 

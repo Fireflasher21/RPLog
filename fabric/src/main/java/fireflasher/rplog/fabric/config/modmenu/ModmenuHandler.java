@@ -8,10 +8,6 @@ import fireflasher.rplog.config.screens.options.*;
 public class ModmenuHandler implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        #if MC_1_18_2 || MC_1_19_2
-        return Optionsscreen_1_18_2::new;
-        #elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
-        return Optionsscreen_1_20_1::new;
-        #endif
+        return Optionsscreen::new;
     }
 }

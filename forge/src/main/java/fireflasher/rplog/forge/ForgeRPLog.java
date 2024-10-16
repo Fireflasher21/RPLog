@@ -20,7 +20,7 @@ import fireflasher.rplog.config.screens.options.*;
 
 #if MC_1_18_2
 import net.minecraftforge.client.ConfigGuiHandler;
-#elif MC_1_19_2 || MC_1_20_1
+#else
 import net.minecraftforge.client.ConfigScreenHandler;
 #endif
 @Mod("rplog")
@@ -43,19 +43,15 @@ public class ForgeRPLog {
                 () -> new ConfigGuiHandler.ConfigGuiFactory(new BiFunction<Minecraft, Screen, Screen>() {
                     @Override
                     public Screen apply(Minecraft mc, Screen screen) {
-                        return new Optionsscreen_1_18_2(Minecraft.getInstance().screen);
+                        return new Optionsscreen(Minecraft.getInstance().screen);
                     }
                 }));
-        #elif MC_1_19_2 || MC_1_20_1
+        #else
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory(new BiFunction<Minecraft, Screen, Screen>() {
                     @Override
                     public Screen apply(Minecraft mc, Screen screen) {
-                        #if MC_1_19_2
-                        return new Optionsscreen_1_18_2(Minecraft.getInstance().screen);
-                        #elif MC_1_20_1
-                        return new Optionsscreen_1_20_1(Minecraft.getInstance().screen);
-                        #endif
+                        return new Optionsscreen(Minecraft.getInstance().screen);
                     }
                 }));
 

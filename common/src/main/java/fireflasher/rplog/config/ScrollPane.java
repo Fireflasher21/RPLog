@@ -5,7 +5,7 @@ import net.minecraft.client.gui.components.Button;
 import java.util.ArrayList;
 import java.util.List;
 
-#if MC_1_18_2 || MC_1_19_2
+#if MC_1_18_2 || MC_1_19_4
 import com.mojang.blaze3d.vertex.PoseStack;
 #elif  MC_1_20_1 || MC_1_20_4 || MC_1_20_6
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,7 +31,7 @@ public class ScrollPane {
     }
     public List<Button> getButtons(){return buttons;}
 
-    #if MC_1_18_2 || MC_1_19_2
+    #if MC_1_18_2
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         int buttonY = maxTop; // Starting Y position for buttons
 
@@ -50,10 +50,13 @@ public class ScrollPane {
         }
     }
 
-    #elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        int buttonY = maxTop; // Starting Y position for buttons
-
+    #elif MC_1_19_4 || MC_1_20_1 || MC_1_20_4 || MC_1_20_6
+    #if MC_1_19_4
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+    #else
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {// Starting Y position for buttons
+    #endif
+        int buttonY = maxTop;
         // Render buttons with scroll offset
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
@@ -63,15 +66,18 @@ public class ScrollPane {
             button.visible = button.getY() >= maxTop && button.getY() <= height - maxTop - button.getHeight();
 
             // Render the button if it is visible
+            #if MC_1_19_4
+            if (button.visible) {button.render(poseStack, mouseX, mouseY, delta);}
+            #else
             if (button.visible) {button.render(guiGraphics, mouseX, mouseY, delta);}
-
+            #endif
             if((i+1)%2==0)buttonY += button.getHeight()+5; // Increment Y for next button
         }
     }
 
     #endif
 
-    #if MC_1_18_2 || MC_1_19_2 || MC_1_20_1
+    #if MC_1_18_2 || MC_1_19_4 || MC_1_20_1
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         scrollOffset += (int) (delta * 10); // Adjust scroll speed
     #elif MC_1_20_4 || MC_1_20_6

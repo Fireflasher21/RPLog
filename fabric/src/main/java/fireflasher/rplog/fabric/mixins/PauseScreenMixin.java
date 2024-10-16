@@ -17,7 +17,6 @@ import fireflasher.rplog.config.screens.options.*;
 @Mixin(PauseScreen.class)
 public abstract class PauseScreenMixin extends Screen {
 
-
     protected PauseScreenMixin(Component title) {
         super(title);
     }
@@ -25,19 +24,11 @@ public abstract class PauseScreenMixin extends Screen {
     @Inject(method = ("createPauseMenu"), at = @At("HEAD"))
     public void createPauseMenu(CallbackInfo callbackInfo){
         if(!FabricLoader.getInstance().isModLoaded("modmenu")) {
-            Screen screen;
-            #if MC_1_18_2 || MC_1_19_2
-            screen = new Optionsscreen_1_18_2(this);
-            Button accessModOption = new Button(0, 0, 35, 20,Component.nullToEmpty("RPL") , button -> {
-                Minecraft.getInstance().setScreen(screen);
-            });
-            #elif MC_1_20_1 || MC_1_20_4
-            screen = new Optionsscreen_1_20_1(this);
-            Button accessModOption = new Button.Builder(Component.nullToEmpty("RPL"),
+            Button accessModOption = Optionsscreen.buttonBuilder(Component.nullToEmpty("RPL"),
+                    0,0,35,20,
                     button -> {
-                        Minecraft.getInstance().setScreen(screen);
-                    }).bounds(0,0,35,20).build();
-            #endif
+                        Minecraft.getInstance().setScreen(new Optionsscreen(this));
+                    });
 
             addRenderableWidget(accessModOption);
         }
