@@ -27,6 +27,7 @@ public class Optionsscreen_1_18_2 extends Screen {
     //ButtonWidth and ButtonHeight
     public static final int B_HEIGHT = 20;
     public static final int B_WIDTH =100;
+    private int borderOffsetFill = 50;
     private ScrollPane scrollPane;
 
     public Optionsscreen_1_18_2(Screen previous) {
@@ -40,7 +41,7 @@ public class Optionsscreen_1_18_2 extends Screen {
         DefaultConfig defaultConfig = RPLog.CONFIG;
         List<ServerConfig> serverConfigList = defaultConfig.getList();
 
-        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,55);
+        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,borderOffsetFill+5);
         addButtonsToScrollPane(serverConfigList);
 
         Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT,
@@ -117,10 +118,8 @@ public class Optionsscreen_1_18_2 extends Screen {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        // Render Order:
-        // First Background
         this.renderBackground(poseStack);
-        fill(poseStack, 0, 50, this.width, this.height-50, 0xFF222222);
+        fill(poseStack, 0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
         scrollPane.render(poseStack,mouseX,mouseY,partialTick);
 
         super.render(poseStack, mouseX, mouseY, partialTick);

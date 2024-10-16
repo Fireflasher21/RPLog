@@ -15,8 +15,7 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 
 import static fireflasher.rplog.Chatlogger.*;
-import static fireflasher.rplog.config.screens.options.Optionsscreen_1_20_1.B_HEIGHT;
-import static fireflasher.rplog.config.screens.options.Optionsscreen_1_20_1.B_WIDTH;
+import static fireflasher.rplog.config.screens.options.Optionsscreen_1_20_1.*;
 
 public class Serverscreen_1_20_1 extends Screen {
 
@@ -41,7 +40,7 @@ public class Serverscreen_1_20_1 extends Screen {
         ServerConfig.ServerDetails serverDetails = serverConfig.getServerDetails();
         List<String> keywords = serverDetails.getServerKeywords();
 
-        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,0);
+        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,borderOffsetFill+5);
         addButtonsToScrollPane(serverDetails);
         //implement static buttons
 
@@ -82,7 +81,7 @@ public class Serverscreen_1_20_1 extends Screen {
     private void addButtonsToScrollPane(ServerConfig.ServerDetails serverDetails){
         scrollPane.getButtons().clear();
         List<String> keywords = serverDetails.getServerKeywords();
-        int i = 30;
+        int i = borderOffsetFill;
         for (String keyword : keywords) {
             i = i + 20;
             Button delete = Button.builder(RPLog.translateAbleStrings.get("rplog.config.screen.delete"),
@@ -111,9 +110,9 @@ public class Serverscreen_1_20_1 extends Screen {
         #elif MC_1_20_4 || MC_1_20_6
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
         #endif
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
+        guiGraphics.fill(0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
         int lengthOfTitle = this.title.getContents().toString().length();
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
     }

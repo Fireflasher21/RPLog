@@ -11,18 +11,18 @@ authors = "${author}"
 description = '''${description}'''
 displayURL = "${websiteUrl}"
 updateJSONURL = "${forgeUpdateUrl}"
-itemIcon = "minecraft:oak_sapling"
+itemIcon = "assets/rplog/icon.png"
 
 [[dependencies.${id}]]
 modId = "forge"
 mandatory = true
 versionRange = "[${forgeVersion},)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.${id}]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[${minecraftVersion}]"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"

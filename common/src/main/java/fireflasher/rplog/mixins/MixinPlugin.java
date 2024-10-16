@@ -1,4 +1,4 @@
-package fireflasher.rplog.mixin;
+package fireflasher.rplog.mixins;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;

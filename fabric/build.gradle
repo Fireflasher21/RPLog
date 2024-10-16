@@ -50,6 +50,7 @@ processResources {
 }
 
 shadowJar {
+    exclude "META-INF/mod.toml"
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set "dev-shadow"
 }

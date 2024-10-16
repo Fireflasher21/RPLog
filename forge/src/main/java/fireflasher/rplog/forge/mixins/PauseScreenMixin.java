@@ -1,4 +1,4 @@
-package fireflasher.rplog.forge.mixin;
+package fireflasher.rplog.forge.mixins;
 
 import fireflasher.rplog.config.screens.options.*;
 import net.minecraft.client.Minecraft;

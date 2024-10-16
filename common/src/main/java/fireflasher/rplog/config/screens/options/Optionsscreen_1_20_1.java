@@ -26,6 +26,7 @@ public class Optionsscreen_1_20_1 extends Screen {
     //ButtonWidth and ButtonHeight
     public static final int B_HEIGHT = 20;
     public static final int B_WIDTH =100;
+    public static final int borderOffsetFill = 50;
     private final ServerConfig dummy = new ServerConfig("dummy", List.of("dummy"), List.of("dummy"));
     private ScrollPane scrollPane;
 
@@ -41,7 +42,7 @@ public class Optionsscreen_1_20_1 extends Screen {
         List<ServerConfig> serverConfigList = defaultConfig.getList();
 
 
-        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,0);
+        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,55);
         addButtonsToScrollPane(serverConfigList);
 
         Button addServer = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
@@ -115,9 +116,9 @@ public class Optionsscreen_1_20_1 extends Screen {
         #elif MC_1_20_4 || MC_1_20_6
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
         #endif
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
         guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
+        scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
 
         Component serverlist = RPLog.translateAbleStrings.get("rplog.config.optionscreen.configuration_Servers");

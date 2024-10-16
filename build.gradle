@@ -16,6 +16,7 @@ println "├── Fabric: ${project.props.fabric}"
 println "└── Forge: ${project.props.forge}"
 println()
 
+
 // Write build.properties with the current version
 new File(projectDir, "build.properties").text = String.format("MC_%s=\n", rootProject.minecraft.replace(".", "_"))
 
@@ -40,13 +41,14 @@ allprojects {
     archivesBaseName = String.format("%s-%s", rootProject.id, rootProject.minecraft)
 
     repositories { maven { url "https://oss.sonatype.org/content/repositories/snapshots" } }
-    dependencies { annotationProcessor "systems.manifold:manifold-preprocessor:2023.1.28" }
+    dependencies { annotationProcessor "systems.manifold:manifold-preprocessor:2024.1.35" }
 
     java {
         withSourcesJar()
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.toVersion(project.props.java)
     }
+
 
     tasks.withType(JavaCompile).tap {
         configureEach {

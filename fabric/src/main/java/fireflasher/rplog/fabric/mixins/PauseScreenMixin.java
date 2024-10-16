@@ -1,4 +1,4 @@
-package fireflasher.rplog.fabric.mixin;
+package fireflasher.rplog.fabric.mixins;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;

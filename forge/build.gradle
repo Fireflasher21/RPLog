@@ -1,11 +1,13 @@
-plugins { id "com.github.johnrengelman.shadow" version "7.1.2" }
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
 architectury { forge() }
 
 loom {
     mixin { defaultRefmapName = "rplog.forge.refmap.json" }
     forge {
-        mixinConfig "rplog.forge.mixins.json"
         mixinConfig "rplog.mixins.json"
+        mixinConfig "rplog.forge.mixins.json"
     }
 }
 
@@ -66,3 +68,4 @@ sourcesJar {
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
 }
+

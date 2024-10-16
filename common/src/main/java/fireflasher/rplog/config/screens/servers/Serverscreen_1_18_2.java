@@ -41,7 +41,7 @@ public class Serverscreen_1_18_2 extends Screen {
         ServerConfig.ServerDetails serverDetails = serverConfig.getServerDetails();
         List<String> keywords = serverDetails.getServerKeywords();
 
-        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,55);
+        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,borderOffsetFill+5);
         addButtonsToScrollPane(serverDetails);
         //implement static buttons
 
@@ -110,7 +110,7 @@ public class Serverscreen_1_18_2 extends Screen {
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(poseStack);
-        fill(poseStack, 0, 50, this.width, this.height-50, 0xFF222222);
+        fill(poseStack, 0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
         scrollPane.render(poseStack,mouseX,mouseY,partialTick);
         super.render(poseStack, mouseX, mouseY, partialTick);
         int lengthOfTitle = 0;

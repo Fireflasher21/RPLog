@@ -51,11 +51,10 @@ public class RPLog {
         for (String key :keys) {
             translateAbleStrings.put(key, new net.minecraft.network.chat.TranslatableComponent(key));
         }
-        #elif MC_1_19_2
+        #elif MC_1_19_2 || MC_1_20_1 || MC_1_20_6
         for (String key :keys) {
             translateAbleStrings.put(key,Component.translatable(key));
         }
-        #elif MC_1_20_1
         #endif
 
     }

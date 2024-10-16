@@ -1,4 +1,4 @@
-package fireflasher.rplog.forge.mixin;
+package fireflasher.rplog.forge.mixins;
 
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;

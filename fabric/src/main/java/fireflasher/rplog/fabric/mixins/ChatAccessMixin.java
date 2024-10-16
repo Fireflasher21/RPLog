@@ -1,7 +1,6 @@
-package fireflasher.rplog.fabric.mixin;
+package fireflasher.rplog.fabric.mixins;
 
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

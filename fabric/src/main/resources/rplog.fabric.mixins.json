@@ -1,11 +1,10 @@
 {
   "parent": "rplog.mixins.json",
-  "package": "fireflasher.rplog.fabric.mixin",
+  "package": "fireflasher.rplog.fabric.mixins",
   "refmap": "rplog.fabric.refmap.json",
   "client": [
     "ChatAccessMixin",
     "PauseScreenMixin"
   ],
-  "mixins": [
-  ]
+  "mixins": []
 }
