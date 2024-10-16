@@ -47,15 +47,9 @@ public class RPLog {
                 "rplog.logger.chatlogger.write_warning"
 
         );
-        #if MC_1_18_2
-        for (String key :keys) {
-            translateAbleStrings.put(key, new net.minecraft.network.chat.TranslatableComponent(key));
-        }
-        #elif MC_1_19_4 || MC_1_20_1 || MC_1_20_6
         for (String key :keys) {
             translateAbleStrings.put(key,Component.translatable(key));
         }
-        #endif
 
     }
 

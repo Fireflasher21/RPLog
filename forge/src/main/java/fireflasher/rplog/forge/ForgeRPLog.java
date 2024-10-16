@@ -18,11 +18,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import java.util.function.BiFunction;
 import fireflasher.rplog.config.screens.options.*;
 
-#if MC_1_18_2
-import net.minecraftforge.client.ConfigGuiHandler;
-#else
 import net.minecraftforge.client.ConfigScreenHandler;
-#endif
+
 @Mod("rplog")
 public class ForgeRPLog {
     public ForgeRPLog() {
@@ -38,15 +35,6 @@ public class ForgeRPLog {
     }
 
     private void registerConfigScreen(){
-        #if MC_1_18_2
-        ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                () -> new ConfigGuiHandler.ConfigGuiFactory(new BiFunction<Minecraft, Screen, Screen>() {
-                    @Override
-                    public Screen apply(Minecraft mc, Screen screen) {
-                        return new Optionsscreen(Minecraft.getInstance().screen);
-                    }
-                }));
-        #else
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory(new BiFunction<Minecraft, Screen, Screen>() {
                     @Override
@@ -55,7 +43,6 @@ public class ForgeRPLog {
                     }
                 }));
 
-        #endif
     }
 
     @SubscribeEvent

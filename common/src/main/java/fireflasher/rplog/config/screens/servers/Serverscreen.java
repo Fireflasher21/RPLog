@@ -1,15 +1,10 @@
 package fireflasher.rplog.config.screens.servers;
 
-
-#if MC_1_18_2 ||  MC_1_19_4
-import com.mojang.blaze3d.vertex.PoseStack;
-#elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
-import net.minecraft.client.gui.GuiGraphics;
-#endif
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.ScrollPane;
 import fireflasher.rplog.config.json.ServerConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -106,56 +101,25 @@ public class Serverscreen extends Screen {
         }
     }
 
-    #if MC_1_18_2 || MC_1_19_4
-    @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(poseStack);
-        fill(poseStack, 0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
-        scrollPane.render(poseStack,mouseX,mouseY,partialTick);
-        super.render(poseStack, mouseX, mouseY, partialTick);
-        int lengthOfTitle = 0;
-
-        #if MC_1_18_2
-        lengthOfTitle = this.title.getContents().length()/2;
-        #elif MC_1_19_4
-        lengthOfTitle = this.title.getContents().toString().length();
-        #endif
-
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
-
-    }
-    #else
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        #if MC_1_20_1
-        this.renderBackground(guiGraphics);
-        #elif MC_1_20_4 || MC_1_20_6
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
-        #endif
         guiGraphics.fill(0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         int lengthOfTitle = this.title.getContents().toString().length();
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
     }
-    #endif
 
     @Override
     public void onClose(){
         this.minecraft.setScreen(previous);
     }
 
-    #if MC_1_20_4 || MC_1_20_6
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return scrollPane.mouseScrolled(mouseX,mouseY,mouseX,mouseY);
     }
-    #else
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return scrollPane.mouseScrolled(mouseX,mouseY,delta);
-    }
-    #endif
 
 
 }
