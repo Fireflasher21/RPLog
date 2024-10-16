@@ -25,7 +25,7 @@ public class Serverscreen_1_18_2 extends Screen {
     private ScrollPane scrollPane;
 
     public Serverscreen_1_18_2(Screen previous, ServerConfig serverConfig) {
-        super(Component.nullToEmpty(getServerNameShortener(serverConfig.getServerDetails().getServerNames())));
+        super(Component.nullToEmpty(getShortestNameOfList(serverConfig.getServerDetails().getServerNames())));
         this.previous = previous;
         this.serverConfig = serverConfig;
     }

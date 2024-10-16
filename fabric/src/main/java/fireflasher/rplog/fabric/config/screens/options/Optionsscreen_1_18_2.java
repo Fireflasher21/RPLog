@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import java.util.regex.Pattern;
 
 import static fireflasher.rplog.Chatlogger.*;
 import static fireflasher.rplog.RPLog.*;
@@ -28,8 +27,7 @@ public class Optionsscreen_1_18_2 extends Screen {
     //ButtonWidth and ButtonHeight
     public static final int B_HEIGHT = 20;
     public static final int B_WIDTH =100;
-    private final ServerConfig dummy = new ServerConfig("dummy", List.of("dummy"), List.of("dummy"));
-    private fireflasher.rplog.fabric.config.screens.ScrollPane scrollPane;
+    private ScrollPane scrollPane;
 
     public Optionsscreen_1_18_2(Screen previous) {
         super(RPLog.translateAbleStrings.get("rplog.config.optionscreen.title"));
@@ -41,33 +39,21 @@ public class Optionsscreen_1_18_2 extends Screen {
     protected void init() {
         DefaultConfig defaultConfig = RPLog.CONFIG;
         List<ServerConfig> serverConfigList = defaultConfig.getList();
-        if (serverConfigList.isEmpty()) {
-            serverConfigList.add(dummy);
-        }
 
         scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,55);
         addButtonsToScrollPane(serverConfigList);
-        serverConfigList.remove(dummy);
 
         Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT,
                 RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
                 button -> {
-                    if ( Minecraft.getInstance().getConnection() != null && !Minecraft.getInstance().hasSingleplayerServer()) {
-                        String address = Minecraft.getInstance().getConnection().getConnection().getRemoteAddress().toString();
-                        LOGGER.warn(address);
-                        Pattern serverAddress = Pattern.compile("static.([0-9]{1,3}[.]){4}");
-                        String serverName;
-                        Boolean ipMatcher = serverAddress.matcher(address.split("/")[0]).find();
-                        String ip = address.split("/")[1];
-                        ip = ip.split(":")[0];
-                        if(ipMatcher) serverName = ip;
-                        else serverName = address.split("/")[0];
-                        defaultConfig.addServerToList(ip, serverName);
+                        String[] address = Chatlogger.getCurrentServerIP();
+                        if(address == null)return;
+
+                        defaultConfig.addServerToList(address[1], address[0]);
                         defaultConfig.loadConfig();
                         addButtonsToScrollPane(serverConfigList);
-                        //Minecraft.getInstance().setScreen(new Optionsscreen_1_18_2(previous));
                     }
-                });
+                );
 
 
         Button defaultconfigbutton = new Button(this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT,
@@ -99,9 +85,10 @@ public class Optionsscreen_1_18_2 extends Screen {
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
             Button serverNameButton = new Button(this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
-                    Component.nullToEmpty(getServerNameShortener(server.getServerDetails().getServerNames())),
+                    Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
                     button ->{
                         if(!button.visible)return;
+                        LOGGER.warn(server);
                         Minecraft.getInstance().setScreen(new Serverscreen_1_18_2(Minecraft.getInstance().screen, server));
                     });
 
@@ -113,12 +100,12 @@ public class Optionsscreen_1_18_2 extends Screen {
                         Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, RPLog.CONFIG, server));
                     });
 
-            if (!serverConfigList.contains(dummy)) {
-                scrollPane.addButton(serverNameButton);
-                scrollPane.addButton(delete);
-                addWidget(serverNameButton);
-                addWidget(delete);
-            }
+
+            scrollPane.addButton(serverNameButton);
+            scrollPane.addButton(delete);
+            addWidget(serverNameButton);
+            addWidget(delete);
+
         }
     }
 

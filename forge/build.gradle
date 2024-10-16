@@ -2,10 +2,10 @@ plugins { id "com.github.johnrengelman.shadow" version "7.1.2" }
 architectury { forge() }
 
 loom {
-    mixin { defaultRefmapName = "examplemod.forge.refmap.json" }
+    mixin { defaultRefmapName = "rplog.forge.refmap.json" }
     forge {
-        mixinConfig "examplemod.forge.mixins.json"
-        mixinConfig "examplemod.mixins.json"
+        mixinConfig "rplog.forge.mixins.json"
+        mixinConfig "rplog.mixins.json"
     }
 }
 

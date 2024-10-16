@@ -14,7 +14,7 @@ import net.minecraft.client.gui.chat.StandardChatListener;
 
 @Mixin(StandardChatListener.class)
 public abstract class ChatAccessMixin {
-    @Inject(method = "handle", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "handle", at = @At("HEAD"))
     public void onChatMessage(ChatType type, Component message, UUID sender, CallbackInfo ci) {
         if (type == ChatType.CHAT) FabricChatLogger.chatFilter(message.getString());
     }

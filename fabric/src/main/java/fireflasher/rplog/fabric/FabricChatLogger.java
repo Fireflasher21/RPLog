@@ -1,13 +1,10 @@
 package fireflasher.rplog.fabric;
 
 import fireflasher.rplog.*;
-import fireflasher.rplog.config.json.ServerConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,39 +13,44 @@ import static fireflasher.rplog.RPLog.LOGGER;
 import static fireflasher.rplog.RPLog.CONFIG;
 
 public class FabricChatLogger {
-    private static String serverIP = "";
-    private static List<String> keywordList = new ArrayList<>();
     private static String timedmessage = "";
     private static boolean error;
 
     public static void chatFilter(String chat){
+        if (keywordList.stream().anyMatch(chat::contains)) addMessage(chat);
+    }
 
-        if( Minecraft.getInstance().getConnection() != null && !Minecraft.getInstance().hasSingleplayerServer()) servercheck();
-        else{
+    protected static void onServerConnectionStatus(boolean connectionStatus) {
+        //On Disconnect (connectionStatus = false)
+        if(!connectionStatus){
+            //Set defaultkeywords and serverName for Singleplayer
             serverName = "Local";
             keywordList = CONFIG.getDefaultKeywords();
+            return;
         }
+        //on Connection to ServerfinalDestinationFolderFilesCount
+        String[] address = Chatlogger.getCurrentServerIP();
+        //get serverConfig by IP
+        serverConfig = CONFIG.getServerObject(address[1]);
 
-        boolean isChannel = keywordList.stream().anyMatch(chat::contains);
-        if (isChannel) addMessage(chat);
-
-    }
-    public static void servercheck(){
-        String address = Minecraft.getInstance().getConnection().getConnection().getRemoteAddress().toString();
-        System.out.println(address);
-        String ip = address.split("/")[1];
-        ip = ip.split(":")[0];
-
-        ServerConfig serverConfig = CONFIG.getServerObject(ip);
-
+        //when config exists
         if(serverConfig != null){
+            //set keywordList to current
             keywordList = serverConfig.getServerDetails().getServerKeywords();
-            if(!address.split("/")[0].contains(serverName) || serverName.equals("Local")) {
-                serverName = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
+            //if current connection domain doesnt contain the shortest domain
+            if(!address[0].contains(serverName)) {
+                //find the shortest domain and set
+                serverName = getShortestNameOfList(serverConfig.getServerDetails().getServerNames());
             }
         }
-        else keywordList = CONFIG.getDefaultKeywords();
-        serverIP = ip;
+        //when no config was found, set ad
+        else{
+            //get main domain of address and set as serverName
+            serverName = getShortestNameOfList(List.of(address[0]));
+            //set keywords to default of config
+            keywordList = CONFIG.getDefaultKeywords();
+        }
+    
     }
 
 
@@ -93,7 +95,6 @@ public class FabricChatLogger {
             LOGGER.warn(logger_writewarning + log.toString());
         }
     }
-
 
 
 

@@ -39,32 +39,21 @@ public class Optionsscreen_1_20_4 extends Screen {
 
 
     protected void init() {
-        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,0);
         DefaultConfig defaultConfig = RPLog.CONFIG;
         List<ServerConfig> serverConfigList = defaultConfig.getList();
-        if (serverConfigList.isEmpty()) {
-            serverConfigList.add(dummy);
-        }
 
+
+        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,0);
         addButtonsToScrollPane(serverConfigList);
-        serverConfigList.remove(dummy);
 
         Button addServer = Button.builder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
                 button -> {
-                    if ( Minecraft.getInstance().getConnection() != null && !Minecraft.getInstance().hasSingleplayerServer()) {
-                        String address = Minecraft.getInstance().getConnection().getConnection().getRemoteAddress().toString();
-                        LOGGER.warn(address);
-                        Pattern serverAddress = Pattern.compile("static.([0-9]{1,3}[.]){4}");
-                        String serverName;
-                        Boolean ipMatcher = serverAddress.matcher(address.split("/")[0]).find();
-                        String ip = address.split("/")[1];
-                        ip = ip.split(":")[0];
-                        if(ipMatcher) serverName = ip;
-                        else serverName = address.split("/")[0];
-                        defaultConfig.addServerToList(ip, serverName);
+                    String[] address = Chatlogger.getCurrentServerIP();
+                        if(address == null)return;
+
+                        defaultConfig.addServerToList(address[1], address[0]);
                         defaultConfig.loadConfig();
                         addButtonsToScrollPane(serverConfigList);
-                        //Minecraft.getInstance().setScreen(new Optionsscreen_1_18_2(previous));
                     }
                 }).bounds(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT)
                 .build();

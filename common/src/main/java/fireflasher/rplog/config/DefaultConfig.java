@@ -6,10 +6,12 @@ import fireflasher.rplog.config.json.JsonConfig;
 import fireflasher.rplog.config.json.ServerConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -113,35 +115,24 @@ public class DefaultConfig {
     }
 
     public void addServerToList(String serverIp, String serverName) {
-        boolean save = false;
-        int i = 0;
-
-        for (ServerConfig serverListe : serverList) {
-            if (!serverListe.getServerIp().equals(serverIp)) {
-                i++;
-                continue;
+        //find serverConfig via stream filter
+        ServerConfig serverConfig = getServerObject(serverIp);
+        //if found add name if not already existing
+        if(serverConfig != null){
+            ServerConfig.ServerDetails serverDetails = serverConfig.getServerDetails();
+            List<String> serverNames = serverDetails.getServerNames();
+            if (!serverNames.contains(serverName)) {
+                serverNames.add(serverName);
+                saveConfig();
             }
-            //Falls Server als Ip bereits in der Liste, überprüf die Liste der Servernamen
-            ServerConfig.ServerDetails temp_serverdetails = serverListe.getServerDetails();
-            if (!temp_serverdetails.getServerNames().contains(serverName)) {
-                this.serverList.remove(serverListe);
-                Pattern serverAddress = Pattern.compile("[A-z]{1,}");
-                if(serverAddress.matcher(serverName).find()) temp_serverdetails.getServerNames().add(0,serverName);
-                else temp_serverdetails.getServerNames().add(serverName);
-                serverListe.setServerDetails(temp_serverdetails);
-                this.serverList.add(serverListe);
-                save = true;
-            }
-        }
-        if(i == serverList.size()) {
-            ServerConfig server = new ServerConfig(serverIp, List.of(serverName), defaultList);
-            serverList.add(server);
-            saveConfig();
             return;
         }
-        if(save){
-            saveConfig();
-        }
+
+        //if no entry has been made yet
+        ServerConfig server = new ServerConfig(serverIp, List.of(serverName), defaultKeywords);
+        serverList.add(server);
+        saveConfig();
+
     }
 
     public void removeServerFromList(ServerConfig serverConfig){
@@ -150,13 +141,8 @@ public class DefaultConfig {
     }
 
     public ServerConfig getServerObject(String serverIp) {
-        for (ServerConfig server : serverList) {
-            if (!server.getServerIp().equals(serverIp)) {
-                continue;
-            }
-            return server;
-        }
-        return null;
+        List<ServerConfig> serverConfigList = serverList.stream().filter(sC -> sC.getServerIp().equals(serverIp)).toList();
+        return serverConfigList.isEmpty() ? null : serverConfigList.get(0);
     }
 
 }

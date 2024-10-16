@@ -1,6 +1,8 @@
 package fireflasher.rplog;
 
 import fireflasher.rplog.config.json.ServerConfig;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 
 import java.io.File;
@@ -13,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -24,10 +25,16 @@ import static fireflasher.rplog.RPLog.*;
 public class Chatlogger {
 
     public static String serverName = "Local";
+    public static List<String> keywordList = new ArrayList<>();
     public static File log;
 
     public static final DateTimeFormatter DATE  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter TIME  = DateTimeFormatter.ofPattern("HH:mm:ss");
+    public static final String rEg = "\\.";
+
+
+    public static ServerConfig serverConfig;
+
     public void setup() {
         String path = RPLog.getFolder();
         File rpFolder = new File(path);
@@ -35,10 +42,11 @@ public class Chatlogger {
         log = new File(path + serverName, LocalDateTime.now().format(DATE) + ".txt");
 
         for(ServerConfig serverConfig: CONFIG.getList()){
-            organizeFolders(serverConfig);
-
-            String server_name = getServerNameShortener(serverConfig.getServerDetails().getServerNames());
+            List<String> serverNameList =serverConfig.getServerDetails().getServerNames();
+            String server_name = getShortestNameOfList(serverNameList);
             String Path = RPLog.getFolder() + server_name;
+            organizeFolders(serverNameList,server_name);
+
 
             log = new File(Path ,LocalDateTime.now().format(DATE) + ".txt");
             File[] files = new File(Path).listFiles();
@@ -79,41 +87,51 @@ public class Chatlogger {
         }
     }
 
-    private boolean organizeFolders(ServerConfig serverConfig){
-        List<String> serverNameList = serverConfig.getServerDetails().getServerNames();
-        Pattern serverAddress = Pattern.compile("[A-z]{1,}");
+    private boolean organizeFolders(List<String> serverNameList, String shortestServerName){
+        //if another folder exists, we want to move the files to the folder with the shortest domain
+        File finalDestinationFolder = new File(RPLog.getFolder() + shortestServerName);
+        //iterate over each server
         for(String serverName: serverNameList){
-            if(serverAddress.matcher(serverName).find()) continue;
+            //if serverName contains shortest domain, skip
+            if(serverName.contains(shortestServerName))continue;
 
             String path = RPLog.getFolder() + serverName;
-            File ipFolder = new File(path);
+            File serverFolder = new File(path);
 
-            if(!ipFolder.exists())continue;
+            //if there is no folder for this name, skip
+            if(!serverFolder.exists())continue;
 
-            File[] ipFolderFiles = ipFolder.listFiles();
-            if(ipFolderFiles == null){
-                ipFolder.delete();
+            //get all files in folder
+            File[] filesInServerFolder = serverFolder.listFiles();
+            //if no files in folder, delete and skip
+            if(filesInServerFolder == null || filesInServerFolder.length == 0){
+                serverFolder.delete();
                 continue;
             }
 
-            File newFolder = new File(RPLog.getFolder() + Chatlogger.getServerNameShortener(serverConfig.getServerDetails().getServerNames()));
+            //check if finalDestinationFolder exists
+            if(finalDestinationFolder.exists()) {
 
-            if(newFolder.exists()) {
-                if(newFolder.listFiles().length == 0) {
-                    newFolder.delete();
-                    ipFolder.renameTo(newFolder);
-                }else {
-                    File[] newFolderFiles = newFolder.listFiles();
-                    if (newFolderFiles.length < ipFolderFiles.length){
-                        moveFiles(newFolder, ipFolder);
-                        ipFolder.renameTo(newFolder);
-                    }
-                    else moveFiles(ipFolder, newFolder);
+                File[] finalDestinationFolderFiles = finalDestinationFolder.listFiles();
+                //if existing but empty, delete and rename current to finalDestination
+                boolean isEmpty = finalDestinationFolderFiles == null || finalDestinationFolderFiles.length == 0;
+                if(isEmpty){
+                    finalDestinationFolder.delete();
+                    serverFolder.renameTo(finalDestinationFolder);
+                    continue;
                 }
+                int finalDestinationFolderFilesCount = finalDestinationFolderFiles.length;
+                //else not empty
+                //if newFolder has more files, move and rename
+                if (filesInServerFolder.length > finalDestinationFolderFilesCount ){
+                    moveFiles(finalDestinationFolder, serverFolder);
+                    serverFolder.renameTo(finalDestinationFolder);
+                }
+                //else move newFolderFiles to finalDestinationFolder
+                else moveFiles(serverFolder, finalDestinationFolder);
             }
-            else ipFolder.renameTo(newFolder);
-
-
+            //if finalDestinationFolder does not exist, rename current
+            else serverFolder.renameTo(finalDestinationFolder);
         }
         return true;
     }
@@ -147,32 +165,45 @@ public class Chatlogger {
         return true;
     }
 
-    public static String getServerNameShortener(List<String> namelist){
-        int[] lenght = new int[2];
-        lenght[0] = namelist.get(0).length();
-        Pattern serverAddress = Pattern.compile("[A-z]{1,}");
-        if(namelist.size() != 1){
-            for(String name:namelist){
-                if(!serverAddress.matcher(name).find()) continue;
-
-                if(lenght[0] > name.length()){
-                    lenght[0] = name.length();
-                    lenght[1] = namelist.indexOf(name);
-                }
+    public static String getShortestNameOfList(List<String> domainList){
+        String name = "";
+        //if list only 1 in size, skip
+        if(domainList.size() >= 1){
+            //Iterate over domainList
+            for(String domain:domainList){
+                //always get main domain, no subdomain
+                int domainArrayLength = domain.split(rEg).length;
+                String serverDomain = domainArrayLength == 1 ? domain : domain.split(rEg)[domainArrayLength-2];
+                //replace current if new domain is shorter
+                if(name.equals("") || serverDomain.length() < name.length())name = serverDomain;
             }
-        }
-        String name = namelist.get(lenght[1]);
-        if(serverAddress.matcher(name).find()){
-            Pattern pattern = Pattern.compile("\\.");
-            Matcher match = pattern.matcher(name);
-            int count = 0;
-            while (match.find()) {
-                count++;
-            }
-            if (count > 1) name = name.split("\\.", 2)[1];
-            name = name.split("\\.")[0];
         }
         return name;
+    }
+
+
+    public static String[] getCurrentServerIP(){
+        Minecraft instance = Minecraft.getInstance();
+        //if is in Singleplayer, return null
+        if(instance.getConnection() == null || instance.hasSingleplayerServer())return null;
+        //Get address with pattern: domain/ip:port
+        String address = instance.getConnection().getConnection().getRemoteAddress().toString();
+        //Split for [domain][IP:Port]
+        String[] domain_ip = address.split("/");
+        //edge case, if domain ends with a \\. remove this
+        if(domain_ip[0].endsWith(rEg))domain_ip[0] = domain_ip[0].substring(0, domain_ip[0].length()-2);
+
+
+        //pattern for static domain_ip: static.xxx.xxx.xxx.xxx.client.your-server.de
+        Pattern staticIPPattern = Pattern.compile("static[.]([0-9]{1,3}[.]){4}");
+        //check if domain_ip[0](domain) has pattern
+        boolean isStaticIP = staticIPPattern.matcher(domain_ip[0]).find();
+
+        //if domain is static ip, set domain name in saved name
+        if(isStaticIP) domain_ip[0] = instance.getCurrentServer().name ;
+        //Split for [domain][IP]
+        domain_ip[1] = domain_ip[1].split(":")[0];
+        return domain_ip;
     }
 
 }
