@@ -5,7 +5,7 @@ public class InitClient {
         // Code here will only run on the physical client.
         // So here you can use net.minecraft.client.
         RPLog.CONFIG.setup();
-        RPLog.CHATLOGGER.setup();
+        RPLog.ChatLogManager.setup();
 
         RPLog.init();
     }

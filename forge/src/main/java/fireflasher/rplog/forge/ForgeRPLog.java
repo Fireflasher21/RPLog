@@ -1,6 +1,6 @@
 package fireflasher.rplog.forge;
 
-import fireflasher.rplog.Chatlogger;
+import fireflasher.rplog.ChatLogManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -52,7 +52,7 @@ public class ForgeRPLog {
         ClientPacketListener handler = mc.getConnection();
 
         if (handler != null) {
-            Chatlogger.onClientConnectionStatus(true);
+            ChatLogManager.onClientConnectionStatus(true);
         }
     }
     @SubscribeEvent
@@ -62,7 +62,7 @@ public class ForgeRPLog {
         ClientPacketListener handler = mc.getConnection();
 
         if (handler != null) {
-            Chatlogger.onClientConnectionStatus(false);
+            ChatLogManager.onClientConnectionStatus(false);
         }
     }
 

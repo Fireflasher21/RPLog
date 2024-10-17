@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-import static fireflasher.rplog.Chatlogger.*;
+import static fireflasher.rplog.ChatLogManager.*;
 import static fireflasher.rplog.config.screens.options.Optionsscreen.*;
 
 public class Serverscreen extends Screen {
@@ -22,7 +22,7 @@ public class Serverscreen extends Screen {
     private ScrollPane scrollPane;
 
     public Serverscreen(Screen previous, ServerConfig serverConfig) {
-        super(Component.nullToEmpty(getShortestNameOfList(serverConfig.getServerDetails().getServerNames())));
+        super(Component.nullToEmpty(getMainDomain(serverConfig.getServerDetails().getServerNames().getFirst())));
         this.previous = previous;
         this.serverConfig = serverConfig;
     }
@@ -36,7 +36,6 @@ public class Serverscreen extends Screen {
     @Override
     protected void init() {
         ServerConfig.ServerDetails serverDetails = serverConfig.getServerDetails();
-        List<String> keywords = serverDetails.getServerKeywords();
 
         scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,borderOffsetFill+5);
         addButtonsToScrollPane(serverDetails);
@@ -45,8 +44,7 @@ public class Serverscreen extends Screen {
         Button reset = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.serverscreen.reset_defaults"),
                 this.width / 2 - this.width / 4 - B_WIDTH/2, 13, B_WIDTH, B_HEIGHT,
                 button -> {
-                    serverConfig.getServerDetails().getServerKeywords().clear();
-                    serverConfig.getServerDetails().getServerKeywords().addAll(RPLog.CONFIG.getDefaultKeywords());
+                    serverConfig.getServerDetails().setServerKeywords(RPLog.CONFIG.getDefaultKeywords());
                     Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
                 });
 
@@ -64,11 +62,13 @@ public class Serverscreen extends Screen {
         Button add = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.serverscreen.add_Keywords"),
                 this.width / 2 + this.width / 4 - insert.getWidth() / 2, insert.getY(), insert.getWidth(), B_HEIGHT,
                 button -> {
-                    if(!keywords.contains(insert.getValue()) && !insert.getValue().isEmpty()){
-                        keywords.add(insert.getValue());
-                        insert.setValue("");
-                        addButtonsToScrollPane(serverDetails);
-                    }});
+                        String keyword = insert.getValue();
+                        if(!keyword.isEmpty() && !serverDetails.getServerKeywords().contains(keyword)){
+                            serverDetails.getServerKeywords().add(keyword);
+                            insert.setValue("");
+                            addButtonsToScrollPane(serverDetails);
+                        }
+                    });
 
         addRenderableWidget(add);
         addRenderableWidget(insert);
@@ -86,7 +86,7 @@ public class Serverscreen extends Screen {
                     this.width / 2 + this.width / 4 - B_WIDTH / 2, i - 5, B_WIDTH, B_HEIGHT,
                     button -> {
                         if(!button.visible)return;
-                        keywords.remove(keyword);
+                        serverDetails.removeServerKeywords(keyword);
                         addButtonsToScrollPane(serverDetails);
                     });
 
@@ -104,9 +104,9 @@ public class Serverscreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.fill(0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
         int lengthOfTitle = this.title.getContents().toString().length();
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
     }

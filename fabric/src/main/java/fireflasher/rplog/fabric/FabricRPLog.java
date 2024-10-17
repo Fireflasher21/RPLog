@@ -1,9 +1,14 @@
 package fireflasher.rplog.fabric;
 
-import fireflasher.rplog.Chatlogger;
+import fireflasher.rplog.ChatLogManager;
 import net.fabricmc.api.ClientModInitializer;
 import fireflasher.rplog.InitClient;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.impl.client.event.lifecycle.ClientLifecycleEventsImpl;
 
 public class FabricRPLog implements ClientModInitializer{
 
@@ -17,12 +22,8 @@ public class FabricRPLog implements ClientModInitializer{
     private void initializeClientEvents(){
         //register trigger for dis- and connect of server
         ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
-            Chatlogger.onClientConnectionStatus(true);
+            ChatLogManager.onClientConnectionStatus(true);
         }));
-
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            Chatlogger.onClientConnectionStatus(true);
-        });
-
+        //TODO find a way to check on server disconnect
     }
 }

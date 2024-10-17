@@ -122,7 +122,7 @@ public class DefaultConfig {
             ServerConfig.ServerDetails serverDetails = serverConfig.getServerDetails();
             List<String> serverNames = serverDetails.getServerNames();
             if (!serverNames.contains(serverName)) {
-                serverNames.add(serverName);
+                serverDetails.addServerName(serverName);
                 saveConfig();
             }
             return;

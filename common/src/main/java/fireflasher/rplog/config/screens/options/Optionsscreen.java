@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static fireflasher.rplog.Chatlogger.*;
+import static fireflasher.rplog.ChatLogManager.*;
 import static fireflasher.rplog.RPLog.*;
 
 public class Optionsscreen extends Screen {
@@ -46,7 +46,7 @@ public class Optionsscreen extends Screen {
         Button addServer = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
                 this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT,
                 button -> {
-                    String[] address = Chatlogger.getCurrentServerIP();
+                    String[] address = getCurrentServerIP();
                         if(address == null)return;
 
                         defaultConfig.addServerToList(address[1], address[0]);
@@ -82,7 +82,7 @@ public class Optionsscreen extends Screen {
         int currentPos = 30;
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
-            Button serverNameButton = buttonBuilder(Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
+            Button serverNameButton = buttonBuilder(Component.nullToEmpty(getMainDomain(server.getServerDetails().getServerNames().getFirst())),
                     this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
                     button ->{
                         if(!button.visible)return;
@@ -97,12 +97,11 @@ public class Optionsscreen extends Screen {
                         Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, RPLog.CONFIG, server));
                     });
 
-            if (!serverConfigList.contains(dummy)) {
-                scrollPane.addButton(serverNameButton);
-                scrollPane.addButton(delete);
-                addWidget(serverNameButton);
-                addWidget(delete);
-            }
+
+            scrollPane.addButton(serverNameButton);
+            scrollPane.addButton(delete);
+            addWidget(serverNameButton);
+            addWidget(delete);
         }
     }
 
@@ -110,9 +109,9 @@ public class Optionsscreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
 
         Component serverlist = RPLog.translateAbleStrings.get("rplog.config.optionscreen.configuration_Servers");
