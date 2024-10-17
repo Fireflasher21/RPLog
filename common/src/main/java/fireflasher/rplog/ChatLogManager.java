@@ -1,8 +1,8 @@
 package fireflasher.rplog;
 
 import fireflasher.rplog.config.json.ServerConfig;
+import fireflasher.rplog.logging.LoggerRunner;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 
 import java.io.*;
@@ -12,38 +12,38 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static fireflasher.rplog.RPLog.*;
 
-public class Chatlogger {
+public class ChatLogManager {
 
     public static String serverName = "Local";
     public static List<String> keywordList = new ArrayList<>();
-    public static File log;
 
     public static final DateTimeFormatter DATE  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter TIME  = DateTimeFormatter.ofPattern("HH:mm:ss");
+    public static final LinkedBlockingDeque<String> messageQueue = new LinkedBlockingDeque<>();
     public static final String rEg = "\\.";
-    public static ServerConfig serverConfig;
 
-    private static String timedmessage = "";
-    private static boolean error;
+    private static ServerConfig serverConfig;
+    private static Thread loggerRunnerThread = new Thread();
+    private static LoggerRunner loggerRunner = new LoggerRunner();
 
     public static void onClientConnectionStatus(boolean connectionStatus){
         //On Disconnect (connectionStatus = false)
-        if(!connectionStatus){
+        if(!connectionStatus || fireflasher.rplog.ChatLogManager.getCurrentServerIP() == null){
             //Set defaultkeywords and serverName for Singleplayer
             serverName = "Local";
             keywordList = CONFIG.getDefaultKeywords();
+            LOGGER.info(serverName);
             return;
         }
         //on Connection to ServerfinalDestinationFolderFilesCount
-        String[] address = Chatlogger.getCurrentServerIP();
+        String[] address = fireflasher.rplog.ChatLogManager.getCurrentServerIP();
         //get serverConfig by IP
         serverConfig = CONFIG.getServerObject(address[1]);
 
@@ -54,87 +54,54 @@ public class Chatlogger {
             //if current connection domain doesnt contain the shortest domain
             if(!address[0].contains(serverName)) {
                 //find the shortest domain and set
-                serverName = getShortestNameOfList(serverConfig.getServerDetails().getServerNames());
+                serverName = getMainDomain(serverConfig.getServerDetails().getServerNames().getFirst());
             }
         }
         //when no config was found, set ad
         else{
             //get main domain of address and set as serverName
-            serverName = getShortestNameOfList(List.of(address[0]));
+            serverName = getMainDomain(address[0]);
             //set keywords to default of config
             keywordList = CONFIG.getDefaultKeywords();
         }
+
+        LOGGER.info(serverName + " " + address);
+        //Call loggerRunner to unset possible errorHandling
+        loggerRunner.onServerInteraction();
     }
     public static void chatFilter(String chat){
-        if (keywordList.stream().anyMatch(chat::contains)) addMessage(chat);
+        if (keywordList.stream().anyMatch(chat::contains)) messageQueue.addLast(chat);
     }
-    private static void addMessage(String chat){
-        String Path = RPLog.getFolder() + serverName;
-        if(!log.toString().contains(LocalDateTime.now().format(DATE)) || !log.getPath().equalsIgnoreCase(Path)) {
-            LocalDateTime today = LocalDateTime.now();
-            String date = today.format(DATE);
-            String Filename = date + ".txt";
-            log = new File(Path, Filename);
-            if(error)log = new File(RPLog.getFolder(), date + "-error.txt");
-            if (!log.exists()) {
-                try {
-                    File path = new File(Path);
-                    path.mkdir();
-                    log.createNewFile();
-                } catch (IOException e) {
-                    Component logger_creationwarning = RPLog.translateAbleStrings.get("rplog.logger.chatlogger.creation_warning");
-                    LOGGER.warn(logger_creationwarning + log.toString());
-                    error = true;
-                }
-            }
-        }
 
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(log, true));
-            BufferedReader br = new BufferedReader(new FileReader(log));
-            LocalDateTime date = LocalDateTime.now();
-
-            String time = "[" + date.format(TIME) + "] ";
-            String message = time + chat;
-
-            String collect = br.lines().collect(Collectors.joining(""));
-            if(collect.isEmpty()) bw.append(message);
-            else if (!timedmessage.equalsIgnoreCase(chat))bw.append("\n" + message);
-            bw.close();
-
-            timedmessage = chat;
-
-        } catch (IOException e) {
-            Component logger_writewarning = RPLog.translateAbleStrings.get("rplog.logger.chatlogger.write_warning");
-            LOGGER.warn(logger_writewarning + log.toString());
-        }
-    }
     protected void setup() {
-        String path = RPLog.getFolder();
-        File rpFolder = new File(path);
+        //start the logger
+        loggerRunnerThread = new Thread(loggerRunner);
+        loggerRunnerThread.start();
+
+        File rpFolder = new File(RPLog.getFolder());
         if(!rpFolder.exists()) rpFolder.mkdir();
-        log = new File(path + serverName, LocalDateTime.now().format(DATE) + ".txt");
 
         for(ServerConfig serverConfig: CONFIG.getList()){
             List<String> serverNameList =serverConfig.getServerDetails().getServerNames();
-            String server_name = getShortestNameOfList(serverNameList);
+            String server_name = getMainDomain(serverNameList.getFirst());
             String Path = RPLog.getFolder() + server_name;
             organizeFolders(serverNameList,server_name);
 
 
-            log = new File(Path ,LocalDateTime.now().format(DATE) + ".txt");
+            File log = new File(Path ,LocalDateTime.now().format(DATE) + ".txt");
             File[] files = new File(Path).listFiles();
             if(files == null){}
             else {
-                for (File textfile : files) {
-                    if (textfile.toString().endsWith(".txt") && textfile.compareTo(log) != 0 ) {
+                for (File fileToZip : files) {
+                    if (fileToZip.toString().endsWith(".txt") && fileToZip.compareTo(log) != 0 ) {
+
+                            String filename  = fileToZip.toString().replaceFirst(rEg+"txt", rEg+"zip");
+
                         try {
-                            String filename  = textfile.toString().replaceFirst("\\.txt", ".zip");
 
                             FileOutputStream fos = new FileOutputStream(filename);
                             ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-                            File fileToZip = new File(textfile.toString());
                             FileInputStream fis = new FileInputStream(fileToZip);
 
                             ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
@@ -240,20 +207,9 @@ public class Chatlogger {
         return true;
     }
 
-    public static String getShortestNameOfList(List<String> domainList){
-        String name = "";
-        //if list only 1 in size, skip
-        if(domainList.size() >= 1){
-            //Iterate over domainList
-            for(String domain:domainList){
-                //always get main domain, no subdomain
-                int domainArrayLength = domain.split(rEg).length;
-                String serverDomain = domainArrayLength == 1 ? domain : domain.split(rEg)[domainArrayLength-2];
-                //replace current if new domain is shorter
-                if(name.equals("") || serverDomain.length() < name.length())name = serverDomain;
-            }
-        }
-        return name;
+    public static String getMainDomain(String domainName){
+        int domainArrayLength = domainName.split(rEg).length;
+        return domainArrayLength == 1 ? domainName : domainName.split(rEg)[domainArrayLength-2];
     }
 
 

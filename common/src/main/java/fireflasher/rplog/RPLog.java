@@ -14,7 +14,7 @@ import java.util.List;
 public class RPLog {
     public static Logger LOGGER = LogManager.getLogger("RPLog");
     public static DefaultConfig CONFIG = new DefaultConfig();
-    public static Chatlogger CHATLOGGER = new Chatlogger();
+    public static ChatLogManager ChatLogManager = new ChatLogManager();
 
     public static HashMap<String,Component> translateAbleStrings = new HashMap<>();
 
