@@ -24,6 +24,9 @@ public class FabricRPLog implements ClientModInitializer{
         ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
             ChatLogManager.onClientConnectionStatus(true);
         }));
-        //TODO find a way to check on server disconnect
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            ChatLogManager.onClientConnectionStatus(false);
+        });
     }
 }
