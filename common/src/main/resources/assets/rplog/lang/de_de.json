@@ -22,5 +22,12 @@
   "rplog.logger.chatlogger.write_warning": "RPLog Datei konnte nicht beschrieben werden: ",
   "rplog.logger.defaultconfig.config_create_error": "RPLog konnte die Config Datei nicht erstellen",
 
-  "rplog.logger.optionscreen.openfolder_error": "RPLog konnte den Log Ordner nicht öffnen"
+  "rplog.logger.optionscreen.openfolder_error": "RPLog konnte den Log Ordner nicht öffnen",
+
+  "rplog.logger.loggerrunner.first_log_message": "LogFile start von ",
+  "rplog.logger.loggerrunner.write_warning": "RPLog konnte nicht in Log Datei schreiben. Bearbeite Fehler:...",
+  "rplog.logger.loggerrunner.error_success": "RPLog konnte die Log Datei wiederherstellen: ",
+  "rplog.logger.loggerrunner.error_file": "RPLog wechselt zu Log Datei: ",
+  "rplog.logger.loggerrunner.message_queue_dequeue_warning": "RPLog konnte die Nachricht nicht entgegennehmen"
+
 }
