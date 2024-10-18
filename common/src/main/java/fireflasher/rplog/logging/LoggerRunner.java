@@ -41,14 +41,23 @@ public class LoggerRunner implements Runnable {
         //while my File exists, run code
         while(true) {
             LocalDate date = LocalDate.now();
-            //check on day switch: if yes, change logFile
-            if(!logFile.getName().contains(date.format(DATE)))setUp_logFile(date);
 
             String messageToPrint;
             try {
-                messageToPrint = getMessageString();
+                //check on day switch: if yes, change logFile
+                if(!logFile.getName().contains(date.format(DATE))){
+                    setUp_logFile(date);
+                    //write first message into file
+                    Component firstLogMessage = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.first_log_message");
+                    messageToPrint = "[RPLog] " +  firstLogMessage + date.format(DATE);
+                }
+                //else getQueuedMessage
+                else messageToPrint = getMessageString();
+
                 if(messageToPrint.isEmpty())continue;
+                //try to print message
                 printMessage(messageToPrint);
+
             } catch (IOException e) {
                 Component logger_writewarning = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.write_warning");
                 LOGGER.error("{}{}", logger_writewarning, logFile.toString(),"");
@@ -119,6 +128,8 @@ public class LoggerRunner implements Runnable {
             }
             logFile.createNewFile();
             printMessage(lastdequeueMessage);
+            Component logger_error_success = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.error_success");
+            LOGGER.info("{}{}", logger_error_success, logFile.toString(),"");
         } catch (IOException ex) {
             error = true;
             setUp_logFile(LocalDate.now());
