@@ -39,7 +39,6 @@ public class ChatLogManager {
             //Set defaultkeywords and serverName for Singleplayer
             serverName = "Local";
             keywordList = CONFIG.getDefaultKeywords();
-            LOGGER.info(serverName);
             return;
         }
         //on Connection to ServerfinalDestinationFolderFilesCount
@@ -65,7 +64,6 @@ public class ChatLogManager {
             keywordList = CONFIG.getDefaultKeywords();
         }
 
-        LOGGER.info(serverName + " " + address);
         //Call loggerRunner to unset possible errorHandling
         loggerRunner.onServerInteraction();
     }
