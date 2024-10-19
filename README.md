@@ -6,7 +6,7 @@
 ## Description
 This Mod is a simple Log Plugin, which logs Keywords which you can specify before handed and while Playing.
 It saves the logs in sorted folders per Server and you can add a custom Keyword-List for each Server.
-If no list is configured for a specific Server, the Mod uses the a default List which can also be edited independently.
+If no list is configured for a specific Server, the Mod uses the default-list which can also be edited independently.
 
 ## Versioning
 
