@@ -1,9 +1,11 @@
 package fireflasher.rplog.forge;
 
 import fireflasher.rplog.ChatLogManager;
+import fireflasher.rplog.RPLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.locale.Language;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -15,13 +17,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import java.io.InputStream;
 import java.util.function.BiFunction;
 import fireflasher.rplog.config.screens.options.*;
 
 import net.minecraftforge.client.ConfigScreenHandler;
 
 @Mod("rplog")
+@Mod.EventBusSubscriber(modid = "rplog", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ForgeRPLog {
+
     public ForgeRPLog() {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -31,7 +36,12 @@ public class ForgeRPLog {
         MinecraftForge.EVENT_BUS.register(this);
         registerConfigScreen();
 
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EntrypointClient::init);
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ForgeRPLog::init);
+        loadLanguage();
+    }
+
+    public static void init(){
+        RPLog.init();
     }
 
     private void registerConfigScreen(){
@@ -63,6 +73,19 @@ public class ForgeRPLog {
 
         if (handler != null) {
             ChatLogManager.onClientConnectionStatus(false);
+        }
+    }
+
+    private void loadLanguage() {
+        String languageFilePath = "/assets/rplog/lang/en_us.json";
+        try (InputStream reader = getClass().getResourceAsStream(languageFilePath)) {
+            // Parse JSON and register translations
+            assert reader != null;
+            Language.loadFromJson(reader,(s, s2) -> {
+                RPLog.translateAbleStrings.put(s,null);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

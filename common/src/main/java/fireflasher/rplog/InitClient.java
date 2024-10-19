@@ -1,12 +1,15 @@
 package fireflasher.rplog;
 
-public class InitClient {
-    public static void init() {
-        // Code here will only run on the physical client.
-        // So here you can use net.minecraft.client.
-        RPLog.CONFIG.setup();
-        RPLog.ChatLogManager.setup();
+import net.fabricmc.api.ModInitializer;
+import net.minecraft.locale.Language;
 
-        RPLog.init();
+import java.io.InputStreamReader;
+
+public class InitClient {
+
+    public void init(){
+        System.out.println("Do i get called too?");
     }
+
+
 }

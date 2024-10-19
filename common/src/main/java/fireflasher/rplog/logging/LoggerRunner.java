@@ -8,6 +8,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 import static fireflasher.rplog.RPLog.LOGGER;
 import static fireflasher.rplog.ChatLogManager.*;
@@ -16,14 +17,15 @@ import static fireflasher.rplog.ChatLogManager.*;
 public class LoggerRunner implements Runnable {
 
     private File logFile;
-    private boolean error = false;
+    private boolean newLogFileOnSetup;
+    private boolean error;
     private String lastdequeueMessage = "";
 
     private static final DateTimeFormatter TIME  = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private void setup(){
-        LocalDateTime date = LocalDateTime.now();
-        setUp_logFile(date.toLocalDate());
+    private void init(){
+        //create new File and reset error
+        onServerInteraction();
     }
 
     private void setUp_logFile(LocalDate date){
@@ -36,40 +38,40 @@ public class LoggerRunner implements Runnable {
     @Override
     public void run() {
         //bring everything intoOrder
-        setup();
-
-        //while my File exists, run code
-        while(true) {
+        init();
+        try {
             LocalDate date = LocalDate.now();
 
-            String messageToPrint;
-            try {
-                //check on day switch: if yes, change logFile
-                if(!logFile.getName().contains(date.format(DATE))){
+            //while my File exists, run code
+            while(true) {
+                date = LocalDate.now();
+
+                String messageToPrint = getMessageString();
+                //check on day switch or if it's the first file of the day: if yes, change logFile and print first message
+                if(!logFile.getName().contains(date.format(DATE)) || newLogFileOnSetup){
                     setUp_logFile(date);
-                    //write first message into file
                     Component firstLogMessage = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.first_log_message");
-                    messageToPrint = "[RPLog] " +  firstLogMessage + date.format(DATE);
+                    printMessage(firstLogMessage.getString() + LocalDate.now().format(DATE) + "\n");
+
+                    //set to false after it was used
+                    newLogFileOnSetup = false;
                 }
-                //else getQueuedMessage
-                else messageToPrint = getMessageString();
 
                 if(messageToPrint.isEmpty())continue;
                 //try to print message
                 printMessage(messageToPrint);
-
-            } catch (IOException e) {
-                Component logger_writewarning = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.write_warning");
-                LOGGER.error("{}{}", logger_writewarning, logFile.toString(),"");
-                //When an exception was thrown, try one time, then switch to errorlogFile
-                handleErrorCase();
-            } catch (InterruptedException e) {
-                Component messageQueueError = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.message_queue_dequeue_warning");
-                LOGGER.error(messageQueueError);
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-                return;
             }
+        } catch (IOException e) {
+            Component logger_writewarning = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.write_warning");
+            LOGGER.error("{}{}", logger_writewarning.getString(), logFile.toString(),"");
+            //When an exception was thrown, try one time, then switch to errorlogFile
+            handleErrorCase();
+        } catch (InterruptedException e) {
+            Component messageQueueError = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.message_queue_dequeue_warning");
+            LOGGER.error(messageQueueError.getString());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return;
         }
     }
 
@@ -85,7 +87,7 @@ public class LoggerRunner implements Runnable {
             lastdequeueMessage = dequeueMessage;
             String time = "[" + LocalDateTime.now().format(TIME) + "] ";
             //merge in messageString with newline
-            return time + dequeueMessage + "\n";
+            return time + dequeueMessage + "\n" ;
         }
         StringBuilder returnMessage = new StringBuilder();
 
@@ -108,10 +110,9 @@ public class LoggerRunner implements Runnable {
 
     private void printMessage(String messageToPrint) throws IOException {
         //creates file and parentfolders if not existing
-        FileOutputStream fileOutputStream = FileUtils.openOutputStream(logFile);
+        FileOutputStream fileOutputStream = FileUtils.openOutputStream(logFile,true);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
         BufferedWriter bw = new BufferedWriter(outputStreamWriter);
-
         bw.append(messageToPrint);
         bw.close();
     }
@@ -129,18 +130,20 @@ public class LoggerRunner implements Runnable {
             logFile.createNewFile();
             printMessage(lastdequeueMessage);
             Component logger_error_success = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.error_success");
-            LOGGER.info("{}{}", logger_error_success, logFile.toString(),"");
+            LOGGER.info("{}{}", logger_error_success.getString(), logFile.toString(),"");
         } catch (IOException ex) {
             error = true;
             setUp_logFile(LocalDate.now());
             Component logger_error_file = RPLog.translateAbleStrings.get("rplog.logger.loggerrunner.error_file");
-            LOGGER.error("{}{}", logger_error_file, logFile.toString(),"");
+            LOGGER.error("{}{}", logger_error_file.getString(), logFile.toString(),"");
         }
     }
 
     public void onServerInteraction(){
         error = false;
         setUp_logFile(LocalDate.now());
+        //check if we start with a new file
+        newLogFileOnSetup = logFile.getTotalSpace() == 0;
     }
 
 

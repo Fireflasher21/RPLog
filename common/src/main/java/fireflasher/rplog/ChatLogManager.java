@@ -18,7 +18,8 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static fireflasher.rplog.RPLog.*;
+import static fireflasher.rplog.RPLog.CONFIG;
+import static fireflasher.rplog.RPLog.LOGGER;
 
 public class ChatLogManager {
 

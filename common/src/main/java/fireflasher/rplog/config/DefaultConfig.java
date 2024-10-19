@@ -50,7 +50,7 @@ public class DefaultConfig {
             this.ConfigFile = new File(ConfigDir, ConfigFileName);
             try {
                 boolean wasCreated = ConfigFile.createNewFile();
-                if(!wasCreated)LOGGER.error(RPLog.translateAbleStrings.get("rplog.logger.defaultconfig.config_create_error")+"\n"+ConfigFile);
+                if(!wasCreated)LOGGER.error(RPLog.translateAbleStrings.get("rplog.logger.defaultconfig.config_create_error").getString()+"\n"+ConfigFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
