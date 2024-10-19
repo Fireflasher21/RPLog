@@ -22,7 +22,7 @@ public class Serverscreen extends Screen {
     private ScrollPane scrollPane;
 
     public Serverscreen(Screen previous, ServerConfig serverConfig) {
-        super(Component.nullToEmpty(getMainDomain(serverConfig.getServerDetails().getServerNames().getFirst())));
+        super(Component.nullToEmpty(getMainDomain(serverConfig.getServerDetails().getServerNames().get(0))));
         this.previous = previous;
         this.serverConfig = serverConfig;
     }

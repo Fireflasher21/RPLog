@@ -82,7 +82,7 @@ public class Optionsscreen extends Screen {
         int currentPos = 30;
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
-            Button serverNameButton = buttonBuilder(Component.nullToEmpty(getMainDomain(server.getServerDetails().getServerNames().getFirst())),
+            Button serverNameButton = buttonBuilder(Component.nullToEmpty(getMainDomain(server.getServerDetails().getServerNames().get(0))),
                     this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
                     button ->{
                         if(!button.visible)return;
