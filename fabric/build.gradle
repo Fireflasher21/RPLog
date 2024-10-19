@@ -51,11 +51,14 @@ processResources {
 
 shadowJar {
     exclude "META-INF/mod.toml"
+
+    archiveVersion =String.format("%s+%s",archiveVersion.get(),"fabric")
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set "dev-shadow"
 }
 
 remapJar {
+    archiveVersion =String.format("%s+%s",archiveVersion.get(),"fabric")
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set null
