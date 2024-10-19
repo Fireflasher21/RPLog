@@ -18,13 +18,13 @@ import static fireflasher.rplog.config.screens.options.Optionsscreen.*;
 public class Serverscreen extends Screen {
 
     private final Screen previous;
-    private final ServerConfig serverConfig;
+    private final ServerConfig.ServerDetails serverDetails;
     private ScrollPane scrollPane;
 
-    public Serverscreen(Screen previous, ServerConfig serverConfig) {
-        super(Component.nullToEmpty(getMainDomain(serverConfig.getServerDetails().getServerNames().get(0))));
+    public Serverscreen(Screen previous, ServerConfig.ServerDetails serverDetails) {
+        super(Component.nullToEmpty(getMainDomain(serverDetails.getServerNames().get(0))));
         this.previous = previous;
-        this.serverConfig = serverConfig;
+        this.serverDetails = serverDetails;
     }
 
 
@@ -35,7 +35,6 @@ public class Serverscreen extends Screen {
 
     @Override
     protected void init() {
-        ServerConfig.ServerDetails serverDetails = serverConfig.getServerDetails();
 
         scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,borderOffsetFill+5);
         addButtonsToScrollPane(serverDetails);
@@ -44,8 +43,8 @@ public class Serverscreen extends Screen {
         Button reset = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.serverscreen.reset_defaults"),
                 this.width / 2 - this.width / 4 - B_WIDTH/2, 13, B_WIDTH, B_HEIGHT,
                 button -> {
-                    serverConfig.getServerDetails().setServerKeywords(RPLog.CONFIG.getDefaultKeywords());
-                    Minecraft.getInstance().setScreen(new Serverscreen(previous, serverConfig));
+                    serverDetails.setServerKeywords(RPLog.CONFIG.getDefaultKeywords());
+                    Minecraft.getInstance().setScreen(new Serverscreen(previous, serverDetails));
                 });
 
 
@@ -64,7 +63,7 @@ public class Serverscreen extends Screen {
                 button -> {
                         String keyword = insert.getValue();
                         if(!keyword.isEmpty() && !serverDetails.getServerKeywords().contains(keyword)){
-                            serverDetails.getServerKeywords().add(keyword);
+                            serverDetails.addServerKeyword(keyword);
                             insert.setValue("");
                             addButtonsToScrollPane(serverDetails);
                         }
@@ -88,6 +87,7 @@ public class Serverscreen extends Screen {
                         if(!button.visible)return;
                         serverDetails.removeServerKeywords(keyword);
                         addButtonsToScrollPane(serverDetails);
+                        Minecraft.getInstance().setScreen(new Serverscreen(previous, serverDetails));
                     });
 
             Button keywordBox = buttonBuilder(Component.nullToEmpty(keyword),

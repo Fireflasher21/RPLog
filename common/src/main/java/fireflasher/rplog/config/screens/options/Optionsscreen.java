@@ -37,8 +37,7 @@ public class Optionsscreen extends Screen {
 
 
     protected void init() {
-        DefaultConfig defaultConfig = RPLog.CONFIG;
-        List<ServerConfig> serverConfigList = defaultConfig.getList();
+        List<ServerConfig> serverConfigList = CONFIG.getList();
 
 
         scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,55);
@@ -49,15 +48,15 @@ public class Optionsscreen extends Screen {
                     String[] address = getCurrentServerIP();
                         if(address == null)return;
 
-                        defaultConfig.addServerToList(address[1], address[0]);
-                        defaultConfig.loadConfig();
+                        CONFIG.addServerToList(address[1], address[0]);
+                        CONFIG.loadConfig();
                         addButtonsToScrollPane(serverConfigList);
                     });
 
         Button defaultconfigbutton = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
                 this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT,
                 button -> {
-                    ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),defaultConfig.getDefaultKeywords());
+                    ServerConfig.ServerDetails defaults = new ServerConfig.ServerDetails(List.of("Defaults"),CONFIG.getDefaultKeywords());
                     Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
                 });
 
@@ -86,7 +85,7 @@ public class Optionsscreen extends Screen {
                     this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
                     button ->{
                         if(!button.visible)return;
-                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
+                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server.getServerDetails()));
                     });
 
 
