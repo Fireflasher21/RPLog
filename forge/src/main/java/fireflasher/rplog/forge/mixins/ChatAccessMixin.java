@@ -18,7 +18,7 @@ public abstract class ChatAccessMixin {
         chatFilter(chat.getString().replaceAll("\r", "\\\\r").replaceAll("\n", "\\\\n"));
     }
 }
-#elif MC_1_19_4 || MC_1_20_1 || MC_1_20_4 || MC_1_20_6
+#elif MC_1_19_4 || MC_1_20_1 || MC_1_20_4
 import net.minecraft.client.GuiMessageTag;
 
 @Mixin(ChatComponent.class)

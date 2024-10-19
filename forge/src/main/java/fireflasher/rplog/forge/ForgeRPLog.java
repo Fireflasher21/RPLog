@@ -70,7 +70,7 @@ public class ForgeRPLog {
     }
     @SubscribeEvent
     public static void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
-        // This event is triggered when the player logs in
+        // This event is triggered when the player disconnects
         Minecraft mc = Minecraft.getInstance();
         ClientPacketListener handler = mc.getConnection();
 

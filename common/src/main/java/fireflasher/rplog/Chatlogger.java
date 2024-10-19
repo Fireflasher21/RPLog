@@ -35,15 +35,15 @@ public class Chatlogger {
     private static boolean error;
 
     public static void onClientConnectionStatus(boolean connectionStatus){
-        //On Disconnect (connectionStatus = false)
-        if(!connectionStatus){
+        //on Connection to ServerfinalDestinationFolderFilesCount
+        String[] address = Chatlogger.getCurrentServerIP();
+        //On Disconnect (connectionStatus == false) or SinglePlayer (address == null)
+        if(!connectionStatus || address == null){
             //Set defaultkeywords and serverName for Singleplayer
             serverName = "Local";
             keywordList = CONFIG.getDefaultKeywords();
             return;
         }
-        //on Connection to ServerfinalDestinationFolderFilesCount
-        String[] address = Chatlogger.getCurrentServerIP();
         //get serverConfig by IP
         serverConfig = CONFIG.getServerObject(address[1]);
 
@@ -66,7 +66,7 @@ public class Chatlogger {
         }
     }
     public static void chatFilter(String chat){
-        if (keywordList.stream().anyMatch(chat::contains)) addMessage(chat);
+        if (keywordList.stream().anyMatch(s -> chat.contains(s))) addMessage(chat);
     }
     private static void addMessage(String chat){
         String Path = RPLog.getFolder() + serverName;

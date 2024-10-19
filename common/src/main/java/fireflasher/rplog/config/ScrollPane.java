@@ -7,7 +7,7 @@ import java.util.List;
 
 #if MC_1_18_2 || MC_1_19_4
 import com.mojang.blaze3d.vertex.PoseStack;
-#elif  MC_1_20_1 || MC_1_20_4 || MC_1_20_6
+#elif  MC_1_20_1 || MC_1_20_4
 import net.minecraft.client.gui.GuiGraphics;
 #endif
 
@@ -51,7 +51,7 @@ public class ScrollPane {
         }
     }
 
-    #elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
+    #elif MC_1_20_1 || MC_1_20_4
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {// Starting Y position for buttons
         int buttonY = maxTop;
         // Render buttons with scroll offset
@@ -73,7 +73,7 @@ public class ScrollPane {
     #if MC_1_18_2 || MC_1_19_4 || MC_1_20_1
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         scrollOffset += (int) (delta * 10); // Adjust scroll speed
-    #elif MC_1_20_4 || MC_1_20_6
+    #elif MC_1_20_4
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         scrollOffset += (int) (scrollY * 10); // Adjust scroll speed
     #endif

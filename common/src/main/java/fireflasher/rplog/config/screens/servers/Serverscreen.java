@@ -3,7 +3,7 @@ package fireflasher.rplog.config.screens.servers;
 
 #if MC_1_18_2 ||  MC_1_19_4
 import com.mojang.blaze3d.vertex.PoseStack;
-#elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
+#elif MC_1_20_1 || MC_1_20_4
 import net.minecraft.client.gui.GuiGraphics;
 #endif
 import fireflasher.rplog.*;
@@ -67,7 +67,7 @@ public class Serverscreen extends Screen {
                 Component.nullToEmpty("Keyword"));
 
         Button add = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.serverscreen.add_Keywords"),
-                this.width / 2 + this.width / 4 - insert.getWidth() / 2, insert.getY(), insert.getWidth(), B_HEIGHT,
+                this.width / 2 + this.width / 4 - insert.getWidth() / 2, this.height-30, insert.getWidth(), B_HEIGHT,
                 button -> {
                     if(!keywords.contains(insert.getValue()) && !insert.getValue().isEmpty()){
                         keywords.add(insert.getValue());
@@ -129,7 +129,7 @@ public class Serverscreen extends Screen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         #if MC_1_20_1
         this.renderBackground(guiGraphics);
-        #elif MC_1_20_4 || MC_1_20_6
+        #elif MC_1_20_4
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
         #endif
         guiGraphics.fill(0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
@@ -145,7 +145,7 @@ public class Serverscreen extends Screen {
         this.minecraft.setScreen(previous);
     }
 
-    #if MC_1_20_4 || MC_1_20_6
+    #if MC_1_20_4
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return scrollPane.mouseScrolled(mouseX,mouseY,mouseX,mouseY);

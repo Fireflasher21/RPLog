@@ -2,7 +2,7 @@ package fireflasher.rplog.config.screens.options;
 
 #if MC_1_18_2 || MC_1_19_4
 import com.mojang.blaze3d.vertex.PoseStack;
-#elif MC_1_20_1 || MC_1_20_4 || MC_1_20_6
+#elif MC_1_20_1 || MC_1_20_4
 import net.minecraft.client.gui.GuiGraphics;
 #endif
 
@@ -131,7 +131,7 @@ public class Optionsscreen extends Screen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         #if MC_1_20_1
         this.renderBackground(guiGraphics);
-        #elif MC_1_20_4 || MC_1_20_6
+        #elif MC_1_20_4
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
         #endif
         guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
@@ -181,7 +181,7 @@ public class Optionsscreen extends Screen {
         this.minecraft.setScreen(previous);
     }
 
-    #if MC_1_20_4 || MC_1_20_6
+    #if MC_1_20_4
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return scrollPane.mouseScrolled(mouseX,mouseY,mouseX,mouseY);
@@ -246,7 +246,7 @@ public class Optionsscreen extends Screen {
         public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             #if MC_1_20_1
             this.renderBackground(guiGraphics);
-            #elif MC_1_20_4 || MC_1_20_6
+            #elif MC_1_20_4
             this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
             #endif
             super.render(guiGraphics, mouseX, mouseY, partialTick);
