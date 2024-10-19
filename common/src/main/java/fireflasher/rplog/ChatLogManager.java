@@ -53,7 +53,7 @@ public class ChatLogManager {
             //if current connection domain doesnt contain the shortest domain
             if(!address[0].contains(serverName)) {
                 //find the shortest domain and set
-                serverName = getMainDomain(serverConfig.getServerDetails().getServerNames().getFirst());
+                serverName = getMainDomain(serverConfig.getServerDetails().getServerNames().get(0));
             }
         }
         //when no config was found, set ad
@@ -81,7 +81,7 @@ public class ChatLogManager {
 
         for(ServerConfig serverConfig: CONFIG.getList()){
             List<String> serverNameList =serverConfig.getServerDetails().getServerNames();
-            String server_name = getMainDomain(serverNameList.getFirst());
+            String server_name = getMainDomain(serverNameList.get(0));
             String Path = RPLog.getFolder() + server_name;
             organizeFolders(serverNameList,server_name);
 
