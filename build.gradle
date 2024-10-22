@@ -16,7 +16,6 @@ println "├── Fabric: ${project.props.fabric}"
 println "└── Forge: ${project.props.forge}"
 println()
 
-
 // Write build.properties with the current version
 new File(projectDir, "build.properties").text = String.format("MC_%s=\n", rootProject.minecraft.replace(".", "_"))
 
@@ -49,7 +48,6 @@ allprojects {
         targetCompatibility = JavaVersion.toVersion(project.props.java)
     }
 
-
     tasks.withType(JavaCompile).tap {
         configureEach {
             options.encoding = "UTF-8"
@@ -57,4 +55,5 @@ allprojects {
             options.compilerArgs += ["-Xplugin:Manifold"]
         }
     }
+
 }

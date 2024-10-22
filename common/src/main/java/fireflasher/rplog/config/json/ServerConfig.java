@@ -1,10 +1,9 @@
 package fireflasher.rplog.config.json;
 
 
-import org.lwjgl.system.CallbackI;
+import fireflasher.rplog.ChatLogManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ServerConfig {
 
@@ -17,7 +16,7 @@ public class ServerConfig {
 
     public ServerConfig(String serverIp, List<String> serverName, List<String> serverKeywords){
         this.serverIp = serverIp;
-        this.serverDetails = new ServerDetails(serverName,serverKeywords);
+        this.serverDetails = new ServerDetails(serverName, serverKeywords);
     }
 
     public String getServerIp() {
@@ -36,58 +35,80 @@ public class ServerConfig {
     
     @Override
     public String toString(){
-        return  "{" + "\"Server\": " + serverIp + "," + "\n" +
-                serverDetails + "}";
+        return String.format("{\"Server\": \"%s\",\n%s}",serverIp,serverDetails);
     }
     
 
-    public class ServerDetails{
+    public static class ServerDetails{
 
 
-        private List<String> serverNames = new ArrayList<>();
+        private List<String> serverNames;
 
-        private List<String> serverKeywords = new ArrayList<>();
+        private List<String> serverKeywords;
 
-        public ServerDetails(){}
-        public ServerDetails(List<String> serverName, List<String> serverKeywords){
-            this.serverNames = serverName;
+        public ServerDetails() {
+            this.serverNames = new ArrayList<>();
+            this.serverKeywords = new ArrayList<>();
+        }
+
+        public ServerDetails(List<String> serverNames, List<String> serverKeywords) {
+            this.serverNames = new ArrayList<>(serverNames);
             this.serverKeywords = serverKeywords;
+            this.serverNames.sort(Comparator.comparingInt(value -> ChatLogManager.getMainDomain(value).length()));
         }
 
         public List<String> getServerNames() {
-            return serverNames;
+            return Collections.unmodifiableList(serverNames);
         }
-        public void setServerNames(List<String> serverNames) {this.serverNames = serverNames;}
+        public void addServerName(String serverName) {
+            if(serverNames.contains(serverName))return;
+            // Insert while maintaining sorted order
+            int index = Collections.binarySearch(serverNames, serverName, Comparator.comparingInt(value -> ChatLogManager.getMainDomain(value).length()));
+            if (index < 0) {
+                index = -(index + 1); // Convert to insertion point
+            }
+            serverNames.add(index, serverName);
+        }
 
+        //ServerKeywordMethods
         public List<String> getServerKeywords() {
             return serverKeywords;
         }
+        public synchronized void addServerKeyword(String keyword) {serverKeywords.add(keyword);}
+        public void removeServerKeywords(String keyword) {
+            serverKeywords.remove(keyword);
+        }
+        public void setServerKeywords(List<String> keywordList) {
+            this.serverKeywords = new ArrayList<>(keywordList);
+        }
         
         @Override
-        public String toString(){
-            return "{" + "\"serverDetails\":" + "{" + "\n" +
-                    "\"serverNames\":" + serverNamesToString() + "," + "\n" +
-                    "\"serverKeywords\":" + serverKeywordsToString() + "\n" +
-                    "}";
+        public String toString() {
+            return String.format("{\"serverDetails\": {\n\"serverNames\": %s,\n\"serverKeywords\": %s\n}}",
+                    serverNamesToString(), serverKeywordsToString());
         }
         
         private String serverNamesToString(){
-            StringBuilder serverNames = new StringBuilder().append("[");
-            for (String serverName: this.serverNames) {
-                serverNames.append(serverName).append(",");
-            }
-            serverNames.deleteCharAt(serverNames.length()-1);
-            serverNames.append("]");
-            return serverNames.toString();
+            return serverNames.isEmpty() ? "[]" : String.format("[%s]", String.join(", ", serverNames));
+
         }
         private String serverKeywordsToString(){
-            StringBuilder serverKeywords = new StringBuilder().append("[");
-            for (String keyword: this.serverKeywords) {
-                serverKeywords.append(keyword).append(",");
-            }
-            serverKeywords.deleteCharAt(serverKeywords.length()-1);
-            serverKeywords.append("]");
-            return serverKeywords.toString();
+            return serverKeywords.isEmpty() ? "[]" : String.format("[%s]", String.join(", ", serverKeywords));
+
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ServerDetails)) return false;
+            ServerDetails that = (ServerDetails) o;
+            return Objects.equals(serverNames, that.serverNames) &&
+                    Objects.equals(serverKeywords, that.serverKeywords);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(serverNames, serverKeywords);
         }
 
     }

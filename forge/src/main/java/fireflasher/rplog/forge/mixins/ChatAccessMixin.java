@@ -1,5 +1,6 @@
 package fireflasher.rplog.forge.mixins;
 
+import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static fireflasher.rplog.Chatlogger.chatFilter;
+import static fireflasher.rplog.ChatLogManager.chatFilter;
 
 #if MC_1_18_2
 @Mixin(ChatComponent.class)
@@ -25,9 +26,8 @@ import net.minecraft.client.GuiMessageTag;
 public abstract class ChatAccessMixin {
 
     @Inject(method = ("logChatMessage"), at = @At("HEAD"))
-    public void logChatMessage(Component chat, GuiMessageTag tag, CallbackInfo ci){
-        chatFilter(chat.getString().replaceAll("\r", "\\\\r").replaceAll("\n", "\\\\n"));
+    public void logChatMessage(Component message, GuiMessageTag tag, CallbackInfo ci){
+        chatFilter(message.getString().replaceAll("\r", "\\\\r").replaceAll("\n", "\\\\n"));
     }
 }
 
-#endif

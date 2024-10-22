@@ -28,7 +28,7 @@
   ],
   "depends": {
     "fabric": ">=${fabricVersion}",
-    "minecraft": "${minecraftVersion}"
+    "minecraft": ">=${minecraftVersion}"
   },
   "custom": {
     "modmenu": {

@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static fireflasher.rplog.Chatlogger.chatFilter;
+import static fireflasher.rplog.ChatLogManager.chatFilter;
 
 #if MC_1_18_2
 import java.util.UUID;
@@ -31,14 +31,16 @@ import java.time.Instant;
 @Mixin(ChatListener.class)
 public abstract class ChatAccessMixin {
 
+    //used for Singleplayer
     @Inject(method = "showMessageToPlayer", at = @At("HEAD"), cancellable = true)
     public void onHudUpdate(ChatType.Bound boundChatType, PlayerChatMessage chatMessage, Component decoratedServerContent, GameProfile gameProfile, boolean onlyShowSecureChat, Instant timestamp, CallbackInfoReturnable<Boolean> cir) {
         chatFilter(chatMessage.signedContent());
     }
 
-    @Inject(method = "logSystemMessage", at = @At("HEAD"), cancellable = true)
-    public void onSystemMessageLog(Component message, Instant timestamp, CallbackInfo ci) {
-        chatFilter(message.getContents().toString());
+    //used in Multiplayer
+    @Inject(method = "handleSystemMessage", at = @At("HEAD"), cancellable = true)
+    public void onSystemMessageLog(Component message, boolean isOverlay, CallbackInfo ci) {
+        chatFilter(message.getString());
     }
 }
 

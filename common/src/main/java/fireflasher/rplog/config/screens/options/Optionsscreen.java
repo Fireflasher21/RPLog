@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static fireflasher.rplog.Chatlogger.*;
+import static fireflasher.rplog.ChatLogManager.*;
 import static fireflasher.rplog.RPLog.*;
 
 public class Optionsscreen extends Screen {
@@ -42,8 +42,7 @@ public class Optionsscreen extends Screen {
 
 
     protected void init() {
-        DefaultConfig defaultConfig = RPLog.CONFIG;
-        List<ServerConfig> serverConfigList = defaultConfig.getList();
+        List<ServerConfig> serverConfigList = CONFIG.getList();
 
 
         scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,55);
@@ -51,18 +50,18 @@ public class Optionsscreen extends Screen {
         Button addServer = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
                 this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT,
                 button -> {
-                    String[] address = Chatlogger.getCurrentServerIP();
+                    String[] address = getCurrentServerIP();
                         if(address == null)return;
 
-                        defaultConfig.addServerToList(address[1], address[0]);
-                        defaultConfig.loadConfig();
+                        CONFIG.addServerToList(address[1], address[0]);
+                        CONFIG.loadConfig();
                         addButtonsToScrollPane(serverConfigList);
                     });
 
         Button defaultconfigbutton = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
                 this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT,
                 button -> {
-                    ServerConfig defaults = new ServerConfig("Defaults",List.of("Defaults"),defaultConfig.getDefaultKeywords());
+                    ServerConfig.ServerDetails defaults = new ServerConfig.ServerDetails(List.of("Defaults"),CONFIG.getDefaultKeywords());
                     Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
                 });
 
@@ -87,11 +86,11 @@ public class Optionsscreen extends Screen {
         int currentPos = 30;
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
-            Button serverNameButton = buttonBuilder(Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
+            Button serverNameButton = buttonBuilder(Component.nullToEmpty(getMainDomain(server.getServerDetails().getServerNames().get(0))),
                     this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
                     button ->{
                         if(!button.visible)return;
-                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
+                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server.getServerDetails()));
                     });
 
 
@@ -102,12 +101,11 @@ public class Optionsscreen extends Screen {
                         Minecraft.getInstance().setScreen(new Verification(Minecraft.getInstance().screen, RPLog.CONFIG, server));
                     });
 
-            if (!serverConfigList.contains(dummy)) {
-                scrollPane.addButton(serverNameButton);
-                scrollPane.addButton(delete);
-                addWidget(serverNameButton);
-                addWidget(delete);
-            }
+
+            scrollPane.addButton(serverNameButton);
+            scrollPane.addButton(delete);
+            addWidget(serverNameButton);
+            addWidget(delete);
         }
     }
 
@@ -134,9 +132,9 @@ public class Optionsscreen extends Screen {
         #elif MC_1_20_4
         this.renderBackground(guiGraphics,mouseX,mouseY,partialTick);
         #endif
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.fill(0, 50, this.width, this.height-50, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
 
         Component serverlist = RPLog.translateAbleStrings.get("rplog.config.optionscreen.configuration_Servers");
