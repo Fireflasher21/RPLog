@@ -75,9 +75,7 @@ public class ServerConfig {
             return serverKeywords;
         }
         public synchronized void addServerKeyword(String keyword) {serverKeywords.add(keyword);}
-        public void removeServerKeywords(String keyword) {
-            serverKeywords.remove(keyword);
-        }
+        public synchronized void removeServerKeywords(String keyword) {serverKeywords.remove(keyword);}
         public void setServerKeywords(List<String> keywordList) {
             this.serverKeywords = new ArrayList<>(keywordList);
         }

@@ -31,7 +31,6 @@ public class Optionsscreen extends Screen {
     public static final int B_HEIGHT = 20;
     public static final int B_WIDTH =100;
     public static final int borderOffsetFill = 50;
-    private final ServerConfig dummy = new ServerConfig("dummy", List.of("dummy"), List.of("dummy"));
     private ScrollPane scrollPane;
 
     public Optionsscreen(Screen previous) {
