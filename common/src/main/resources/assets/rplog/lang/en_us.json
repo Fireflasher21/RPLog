@@ -15,12 +15,18 @@
   "rplog.config.serverscreen.add_Keywords":"Add",
   "rplog.config.serverscreen.serverAdress":"ServerAdress",
 
-  "rplog.logger.defaultconfig.config_created": "Config loaded successfully",
+  "rplog.logger.defaultconfig.config_created": "RPLog config loaded successfully",
 
-  "rplog.logger.chatlogger.zip_warning": "Logfile couldnt be zipped",
-  "rplog.logger.chatlogger.creation_warning": "RPLog File couldnt be created: ",
-  "rplog.logger.chatlogger.write_warning": "RPLog File couldnt be written: ",
-  "rplog.logger.defaultconfig.config_create_error": "RPLog couldnt create config file",
+  "rplog.logger.chatlogger.zip_warning": "RPLog Logfile couldn't be zipped",
+  "rplog.logger.chatlogger.creation_warning": "RPLog File couldn't be created: ",
+  "rplog.logger.chatlogger.write_warning": "RPLog File couldn't be written: ",
+  "rplog.logger.defaultconfig.config_create_error": "RPLog couldn't create config file",
 
-  "rplog.logger.optionscreen.openfolder_error": "RPLog couldnt open the log folder"
+  "rplog.logger.optionscreen.openfolder_error": "RPLog couldn't open the log folder",
+
+  "rplog.logger.loggerrunner.first_log_message": "LogFile start of ",
+  "rplog.logger.loggerrunner.write_warning": "RPLog couldn't write into log file. Handling error",
+  "rplog.logger.loggerrunner.error_success": "RPLog restored logfile: ",
+  "rplog.logger.loggerrunner.error_file": "RPLog switching to error log file: ",
+  "rplog.logger.loggerrunner.message_queue_dequeue_warning": "RPLog couldn't retrieve message"
 }

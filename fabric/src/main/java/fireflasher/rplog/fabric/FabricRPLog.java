@@ -1,15 +1,15 @@
 package fireflasher.rplog.fabric;
 
-import fireflasher.rplog.Chatlogger;
+import fireflasher.rplog.ChatLogManager;
+import fireflasher.rplog.RPLog;
 import net.fabricmc.api.ClientModInitializer;
-import fireflasher.rplog.InitClient;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 public class FabricRPLog implements ClientModInitializer{
 
     @Override
     public void onInitializeClient() {
-        InitClient.init();
+        RPLog.init();
 
         initializeClientEvents();
     }
@@ -17,11 +17,11 @@ public class FabricRPLog implements ClientModInitializer{
     private void initializeClientEvents(){
         //register trigger for dis- and connect of server
         ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
-            Chatlogger.onClientConnectionStatus(true);
+            ChatLogManager.onClientConnectionStatus(true);
         }));
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            Chatlogger.onClientConnectionStatus(true);
+            ChatLogManager.onClientConnectionStatus(false);
         });
 
     }

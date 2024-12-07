@@ -1,11 +1,10 @@
 package fireflasher.rplog.config.screens.options;
 
-#if MC_1_16_5
 import com.mojang.blaze3d.vertex.PoseStack;
 import fireflasher.rplog.*;
 import fireflasher.rplog.config.DefaultConfig;
-import fireflasher.rplog.config.json.ServerConfig;
 import fireflasher.rplog.config.ScrollPane;
+import fireflasher.rplog.config.json.ServerConfig;
 import fireflasher.rplog.config.screens.servers.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -17,8 +16,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-
-import static fireflasher.rplog.Chatlogger.*;
+import static fireflasher.rplog.ChatLogManager.*;
 import static fireflasher.rplog.RPLog.*;
 
 public class Optionsscreen extends Screen {
@@ -39,29 +37,28 @@ public class Optionsscreen extends Screen {
 
 
     protected void init() {
-        DefaultConfig defaultConfig = RPLog.CONFIG;
-        List<ServerConfig> serverConfigList = defaultConfig.getList();
+        List<ServerConfig> serverConfigList = CONFIG.getList();
 
-        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,borderOffsetFill+5);
+
+        scrollPane = new ScrollPane(this.width,this.height, B_HEIGHT,55);
         addButtonsToScrollPane(serverConfigList);
 
         Button addServer = new Button(this.width / 2 - this.width / 4 - 50, 13, B_WIDTH, B_HEIGHT,
                 RPLog.translateAbleStrings.get("rplog.config.optionscreen.add_Server"),
                 button -> {
-                        String[] address = Chatlogger.getCurrentServerIP();
+                    String[] address = getCurrentServerIP();
                         if(address == null)return;
 
-                        defaultConfig.addServerToList(address[1], address[0]);
-                        defaultConfig.loadConfig();
+                        CONFIG.addServerToList(address[1], address[0]);
+                        CONFIG.loadConfig();
                         addButtonsToScrollPane(serverConfigList);
-                    }
-                );
+                    });
 
 
         Button defaultconfigbutton = new Button(this.width / 2 + this.width / 4 - B_WIDTH/2 , 13, B_WIDTH, B_HEIGHT,
                 RPLog.translateAbleStrings.get("rplog.config.screen.defaults"),
                 button -> {
-                    ServerConfig defaults = new ServerConfig("Defaults", Arrays.asList("Defaults"),defaultConfig.getDefaultKeywords());
+                    ServerConfig.ServerDetails defaults = new ServerConfig.ServerDetails(Arrays.asList("Defaults"),CONFIG.getDefaultKeywords());
                     Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, defaults));
                 });
 
@@ -87,10 +84,10 @@ public class Optionsscreen extends Screen {
         for (ServerConfig server : serverConfigList) {
             currentPos += 25;
             Button serverNameButton = new Button(this.width / 2 - this.width / 4 - B_WIDTH /2, currentPos, B_WIDTH, B_HEIGHT,
-                    Component.nullToEmpty(getShortestNameOfList(server.getServerDetails().getServerNames())),
+                    Component.nullToEmpty(getMainDomain(server.getServerDetails().getServerNames().get(0))),
                     button ->{
                         if(!button.visible)return;
-                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server));
+                        Minecraft.getInstance().setScreen(new Serverscreen(Minecraft.getInstance().screen, server.getServerDetails()));
                     });
 
 
@@ -106,7 +103,6 @@ public class Optionsscreen extends Screen {
             scrollPane.addButton(delete);
             addWidget(serverNameButton);
             addWidget(delete);
-
         }
     }
 
@@ -185,7 +181,6 @@ public class Optionsscreen extends Screen {
                     button -> {
                         defaultConfig.removeServerFromList(serverConfig);
                         onClose();
-                        //Minecraft.getInstance().setScreen(new Optionsscreen_1_18_2(previous));
                     });
 
 
@@ -212,5 +207,3 @@ public class Optionsscreen extends Screen {
 
     }
 }
-
-#endif
