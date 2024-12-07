@@ -71,14 +71,12 @@ public class ServerConfig {
         }
 
         //ServerKeywordMethods
-        public List<String> getServerKeywords() {
+        public synchronized List<String> getServerKeywords() {
             return serverKeywords;
         }
         public synchronized void addServerKeyword(String keyword) {serverKeywords.add(keyword);}
         public synchronized void removeServerKeywords(String keyword) {serverKeywords.remove(keyword);}
-        public void setServerKeywords(List<String> keywordList) {
-            this.serverKeywords = new ArrayList<>(keywordList);
-        }
+        public synchronized void setServerKeywords(List<String> keywordList) {this.serverKeywords = new ArrayList<>(keywordList);}
         
         @Override
         public String toString() {

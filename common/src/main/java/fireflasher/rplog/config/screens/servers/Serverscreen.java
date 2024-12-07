@@ -49,7 +49,7 @@ public class Serverscreen extends Screen {
         Button reset = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.serverscreen.reset_defaults"),
                 this.width / 2 - this.width / 4 - B_WIDTH/2, 13, B_WIDTH, B_HEIGHT,
                 button -> {
-                    serverDetails.setServerKeywords(new ArrayList<>(RPLog.CONFIG.getDefaultKeywords()));
+                    serverDetails.setServerKeywords(RPLog.CONFIG.getDefaultKeywords());
                     Minecraft.getInstance().setScreen(new Serverscreen(previous, serverDetails));
                 });
 
@@ -143,6 +143,11 @@ public class Serverscreen extends Screen {
 
     @Override
     public void onClose(){
+        //dirty fix for not synchronized access to keylist after editing
+        // TODO: needs proper fix
+        //true because it could be a server that they are playing on
+        //true also handles if its singleplayer or no world, false is more performant tho
+        ChatLogManager.onClientConnectionStatus(true);
         this.minecraft.setScreen(previous);
     }
 
