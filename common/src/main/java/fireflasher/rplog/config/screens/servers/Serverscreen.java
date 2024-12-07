@@ -113,6 +113,11 @@ public class Serverscreen extends Screen {
 
     @Override
     public void onClose(){
+        //dirty fix for not synchronized access to keylist after editing
+        // TODO: needs proper fix
+        //true because it could be a server that they are playing on
+        //true also handles if its singleplayer or no world, false is more performant tho
+        ChatLogManager.onClientConnectionStatus(true);
         this.minecraft.setScreen(previous);
     }
 

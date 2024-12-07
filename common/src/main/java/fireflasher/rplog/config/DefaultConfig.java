@@ -110,7 +110,7 @@ public class DefaultConfig {
         return this.serverList;
     }
 
-    public List<String> getDefaultKeywords() {
+    public synchronized List<String> getDefaultKeywords() {
         return defaultKeywords;
     }
 

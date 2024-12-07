@@ -35,15 +35,17 @@ public class ChatLogManager {
     private static LoggerRunner loggerRunner = new LoggerRunner();
 
     public static void onClientConnectionStatus(boolean connectionStatus){
-        //On Disconnect (connectionStatus = false)
-        if(!connectionStatus || fireflasher.rplog.ChatLogManager.getCurrentServerIP() == null){
+        //on Connection to Server
+        String[] address = null;
+        if(connectionStatus) address = fireflasher.rplog.ChatLogManager.getCurrentServerIP();
+        //On Disconnect: address is null
+        //On Connect to Singleplayer: address is also null
+        if(address == null){
             //Set defaultkeywords and serverName for Singleplayer
             serverName = "Local";
             keywordList = CONFIG.getDefaultKeywords();
             return;
         }
-        //on Connection to ServerfinalDestinationFolderFilesCount
-        String[] address = fireflasher.rplog.ChatLogManager.getCurrentServerIP();
         //get serverConfig by IP
         serverConfig = CONFIG.getServerObject(address[1]);
 
@@ -57,7 +59,7 @@ public class ChatLogManager {
                 serverName = getMainDomain(serverConfig.getServerDetails().getServerNames().get(0));
             }
         }
-        //when no config was found, set ad
+        //when no config was found, set address
         else{
             //get main domain of address and set as serverName
             serverName = getMainDomain(address[0]);
