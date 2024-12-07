@@ -50,7 +50,7 @@ public class DefaultConfig {
             this.ConfigFile = new File(ConfigDir, ConfigFileName);
             try {
                 boolean wasCreated = ConfigFile.createNewFile();
-                if(!wasCreated)LOGGER.error(RPLog.translateAbleStrings.get("rplog.logger.defaultconfig.config_create_error")+"\n"+ConfigFile);
+                if(!wasCreated)LOGGER.error(RPLog.translateAbleStrings.get("rplog.logger.defaultconfig.config_create_error").getString()+"\n"+ConfigFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -110,7 +110,7 @@ public class DefaultConfig {
         return this.serverList;
     }
 
-    public List<String> getDefaultKeywords() {
+    public synchronized List<String> getDefaultKeywords() {
         return defaultKeywords;
     }
 
@@ -122,7 +122,7 @@ public class DefaultConfig {
             ServerConfig.ServerDetails serverDetails = serverConfig.getServerDetails();
             List<String> serverNames = serverDetails.getServerNames();
             if (!serverNames.contains(serverName)) {
-                serverNames.add(serverName);
+                serverDetails.addServerName(serverName);
                 saveConfig();
             }
             return;

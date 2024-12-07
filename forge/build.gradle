@@ -48,11 +48,13 @@ processResources {
 shadowJar {
     exclude "fabric.mod.json"
 
+    archiveVersion =String.format("%s+%s",archiveVersion.get(),"forge")
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set "dev-shadow"
 }
 
 remapJar {
+    archiveVersion =String.format("%s+%s",archiveVersion.get(),"forge")
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set null

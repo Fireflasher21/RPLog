@@ -3,8 +3,7 @@
   "package": "fireflasher.rplog.forge.mixins",
   "refmap": "rplog.forge.refmap.json",
   "client": [
-    "ChatAccessMixin",
-    "PauseScreenMixin"
+    "ChatAccessMixin"
   ],
   "mixins": []
 }
