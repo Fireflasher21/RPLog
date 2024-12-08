@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static fireflasher.rplog.ChatLogManager.*;
@@ -65,7 +64,7 @@ public class Serverscreen extends Screen {
                 Component.nullToEmpty("Keyword"));
 
         Button add = buttonBuilder(RPLog.translateAbleStrings.get("rplog.config.serverscreen.add_Keywords"),
-                this.width / 2 + this.width / 4 - insert.getWidth() / 2, insert.getY(), insert.getWidth(), B_HEIGHT,
+                this.width / 2 + this.width / 4 - insert.getWidth() / 2, insert.getHeight(), insert.getWidth(), B_HEIGHT,
                 button -> {
                         String keyword = insert.getValue();
                         if(!keyword.isEmpty() && !serverDetails.getServerKeywords().contains(keyword)){
@@ -119,7 +118,7 @@ public class Serverscreen extends Screen {
         #if MC_1_18_2
         lengthOfTitle = this.title.getContents().length()/2;
         #elif MC_1_19_4
-        lengthOfTitle = this.title.getContents().toString().length();
+        lengthOfTitle = this.title.getContents().toString().length()/2;
         #endif
 
         drawCenteredString(poseStack, this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
@@ -136,7 +135,7 @@ public class Serverscreen extends Screen {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.fill(0, borderOffsetFill, this.width, this.height-borderOffsetFill, 0xFF222222);
         scrollPane.render(guiGraphics,mouseX,mouseY,partialTick);
-        int lengthOfTitle = this.title.getContents().toString().length();
+        int lengthOfTitle = this.title.getContents().toString().length()/2;
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2 - lengthOfTitle , 18, 0xffffff);
     }
     #endif

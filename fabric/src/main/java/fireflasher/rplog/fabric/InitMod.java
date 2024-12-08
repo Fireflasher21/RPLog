@@ -1,14 +1,10 @@
 package fireflasher.rplog.fabric;
 
-import com.terraformersmc.modmenu.util.TranslationUtil;
 import fireflasher.rplog.RPLog;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.locale.Language;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class InitMod implements ModInitializer {
 

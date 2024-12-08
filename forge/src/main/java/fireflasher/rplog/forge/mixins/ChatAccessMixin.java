@@ -30,4 +30,4 @@ public abstract class ChatAccessMixin {
         chatFilter(message.getString().replaceAll("\r", "\\\\r").replaceAll("\n", "\\\\n"));
     }
 }
-
+#endif
